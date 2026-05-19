@@ -73,7 +73,11 @@
                         </div>
                         <div class="mb-4">
                             <label class="form-label fw-semibold">Kelas</label>
-                            <input type="text" id="kelasSiswa" class="form-control form-control-lg border-success" placeholder="Contoh: 4A">
+                            <select id="kelasSiswa" class="form-select">
+                                <option value="">Pilih Kelas...</option>
+                                <option value="4A">Kelas 4A</option>
+                                <option value="4B">Kelas 4B</option>
+                            </select>
                         </div>
                         <button onclick="mulaiBelajar()" class="btn btn-custom w-100 btn-lg shadow-sm" id="btn-mulai">Mulai Belajar <i class="fa-solid fa-arrow-right ms-2"></i></button>
                     </div>
