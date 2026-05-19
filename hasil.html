@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasil Evaluasi Hijrah Nabi Muhammad SAW</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        :root {
+            --hijau-tua: #198754; 
+            --hijau-muda: #20c997;
+            --kuning: #ffc107;
+        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f4fdf8; }
+        .bg-gradient-custom { background: linear-gradient(135deg, var(--hijau-tua) 0%, var(--hijau-muda) 100%); color: white; }
+        .text-tema { color: var(--hijau-tua); }
+        .card-custom { border: none; border-radius: 16px; box-shadow: 0 8px 16px rgba(25, 135, 84, 0.1); border-top: 4px solid var(--kuning); }
+        
+        .bg-success-soft { background-color: #d1e7dd; border-color: #badbcc; }
+        .bg-danger-soft { background-color: #f8d7da; border-color: #f5c2c7; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-custom shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#"><i class="fa-solid fa-award me-2 text-warning"></i>Hasil Evaluasi Akhir</a>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                
+                <div class="card card-custom p-5 text-center mb-4">
+                    <i class="fa-solid fa-medal fa-4x text-warning mb-3"></i>
+                    <h2 class="fw-bold text-tema">Alhamdulillah, Selesai!</h2>
+                    
+                    <div class="my-3">
+                        <span class="badge bg-success fs-6 me-2"><i class="fa-solid fa-user me-1"></i> <span id="res-nama"></span></span>
+                        <span class="badge bg-secondary fs-6"><i class="fa-solid fa-users-rectangle me-1"></i> Kelas <span id="res-kelas"></span></span>
+                    </div>
+
+                    <div class="row text-start mt-4 bg-light p-3 rounded-4 mx-auto border border-success">
+                        <div class="col-6 text-center border-end border-success">
+                            <small class="text-muted fw-bold">Skor Pilihan Ganda</small>
+                            <h4 class="fw-bold text-tema" id="skor-pg">0</h4>
+                        </div>
+                        <div class="col-6 text-center">
+                            <small class="text-muted fw-bold">Skor Isian Singkat</small>
+                            <h4 class="fw-bold text-tema" id="skor-jasing">0</h4>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <small class="text-muted fw-bold">NILAI AKHIR RATA-RATA</small>
+                        <div class="display-1 fw-bold my-2" id="nilai-akhir">0</div>
+                    </div>
+                    <p class="fw-semibold text-muted mt-2 mb-4"><i class="fa-solid fa-cloud-check text-success me-1"></i> Nilai Anda telah tersimpan otomatis ke database guru.</p>
+                    
+                    <button onclick="kerjakanLagi()" class="btn btn-outline-danger w-50 mx-auto fw-bold">
+                        <i class="fa-solid fa-rotate-right me-1"></i> Keluar & Hapus Sesi
+                    </button>
+                </div>
+
+                <div class="card card-custom p-4">
+                    <h4 class="fw-bold text-tema mb-4 border-bottom border-success pb-2"><i class="fa-solid fa-magnifying-glass-chart me-2 text-warning"></i>Review Jawaban Anda</h4>
+                    <div id="review-container"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const supabaseUrl = 'https://oisrtlcxdwgvzrxrlzpb.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9pc3J0bGN4ZHdndnpyeHJsenBiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMwMzM3OTEsImV4cCI6MjA3ODYwOTc5MX0.aI162olkIydnJrRxLnC0NsBU9umySmd2nWSTt8Hc1ec';
+        const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        window.onload = async () => {
+            const nama = localStorage.getItem('hijrah_nama');
+            const kelas = localStorage.getItem('hijrah_kelas');
+            const recordId = localStorage.getItem('hijrah_recordId');
+            const answersStr = localStorage.getItem('hijrah_jawaban');
+            
+            if (!nama || !answersStr) {
+                Swal.fire('Data Kosong', 'Anda belum mengerjakan kuis atau sesi telah dihapus.', 'warning').then(() => {
+                    window.location.href = 'index.html';
+                });
+                return;
+            }
+
+            document.getElementById('res-nama').innerText = nama;
+            document.getElementById('res-kelas').innerText = kelas;
+
+            try {
+                const response = await fetch('soal.json');
+                const bankSoal = await response.json();
+                const answers = JSON.parse(answersStr);
+                
+                kalkulasiDanTampilkan(bankSoal, answers, recordId);
+            } catch (error) {
+                Swal.fire('Error', 'Gagal memuat bank soal dari soal.json.', 'error');
+            }
+        };
+
+        async function kalkulasiDanTampilkan(bankSoal, answers, recordId) {
+            let benarPG = 0;
+            let reviewHTML = '<h5 class="fw-bold mt-2 text-tema">A. Pilihan Ganda</h5>';
+
+            bankSoal.pilihanGanda.forEach(q => {
+                let userAnswerIdx = answers.pg[q.id];
+                let isCorrect = (userAnswerIdx !== undefined && parseInt(userAnswerIdx) === q.jawaban);
+                if (isCorrect) benarPG++;
+                
+                let userText = userAnswerIdx !== undefined ? q.opsi[userAnswerIdx] : '<i>Tidak dijawab</i>';
+                let correctText = q.opsi[q.jawaban];
+                
+                let cardClass = isCorrect ? 'bg-success-soft text-dark' : 'bg-danger-soft text-dark';
+                let iconClass = isCorrect ? '<i class="fa-solid fa-check-circle text-success"></i>' : '<i class="fa-solid fa-xmark-circle text-danger"></i>';
+
+                reviewHTML += `
+                <div class="p-3 mb-3 border rounded ${cardClass}">
+                    <p class="fw-bold mb-2">${q.id}. ${q.soal}</p>
+                    <p class="mb-1">Jawaban Anda: <b>${userText}</b> ${iconClass}</p>
+                    ${!isCorrect ? `<p class="mb-0 text-success fw-bold">Kunci Jawaban: ${correctText}</p>` : ''}
+                </div>`;
+            });
+
+            let benarJasing = 0;
+            reviewHTML += '<h5 class="fw-bold mt-5 text-tema">B. Jawaban Singkat</h5>';
+            
+            bankSoal.jawabanSingkat.forEach(q => {
+                let userAns = answers.jasing[q.id] ? answers.jasing[q.id].trim().toLowerCase() : '';
+                let isCorrect = q.kunci.includes(userAns);
+                if (isCorrect) benarJasing++;
+
+                let userText = userAns !== '' ? answers.jasing[q.id] : '<i>Tidak dijawab</i>';
+                let cardClass = isCorrect ? 'bg-success-soft text-dark' : 'bg-danger-soft text-dark';
+                let iconClass = isCorrect ? '<i class="fa-solid fa-check-circle text-success"></i>' : '<i class="fa-solid fa-xmark-circle text-danger"></i>';
+
+                reviewHTML += `
+                <div class="p-3 mb-3 border rounded ${cardClass}">
+                    <p class="fw-bold mb-2">${q.id}. ${q.soal}</p>
+                    <p class="mb-1">Jawaban Anda: <b>${userText}</b> ${iconClass}</p>
+                    ${!isCorrect ? `<p class="mb-0 text-success fw-bold">Kunci (Contoh Benar): ${q.kunci[0]}</p>` : ''}
+                </div>`;
+            });
+
+            let skorPG = (benarPG / bankSoal.pilihanGanda.length) * 100;
+            let skorJasing = (benarJasing / bankSoal.jawabanSingkat.length) * 100;
+            let finalScore = Math.round((skorPG + skorJasing) / 2);
+
+            document.getElementById('skor-pg').innerText = Math.round(skorPG);
+            document.getElementById('skor-jasing').innerText = Math.round(skorJasing);
+            document.getElementById('review-container').innerHTML = reviewHTML;
+            
+            const nilaiEl = document.getElementById('nilai-akhir');
+            nilaiEl.innerText = finalScore;
+            if(finalScore < 70) {
+                nilaiEl.classList.add("text-danger");
+            } else {
+                nilaiEl.classList.add("text-success");
+            }
+
+            // MENGGUNAKAN TABEL BARU: progress_siswa
+            if(recordId) {
+                await supabaseClient.from('progress_siswa')
+                    .update({ progress: 'materi_selesai', nilai: finalScore })
+                    .eq('id', recordId);
+            }
+        }
+
+        function kerjakanLagi() {
+            Swal.fire({
+                title: 'Hapus Sesi Ini?',
+                text: "Riwayat pekerjaan dan nilai di browser perangkat ini akan dibersihkan agar siswa lain bisa mengerjakan.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Ya, Keluar & Bersihkan'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    localStorage.removeItem('hijrah_nama');
+                    localStorage.removeItem('hijrah_kelas');
+                    localStorage.removeItem('hijrah_step');
+                    localStorage.removeItem('hijrah_recordId');
+                    localStorage.removeItem('hijrah_jawaban');
+                    window.location.href = 'index.html';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

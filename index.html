@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latihan Soal Asesmen - Hijrah Nabi Muhammad SAW</title>
+    
+    <meta property="og:url" content="https://kelas4pai.vercel.app/hijrah/index.html" />
+    <meta property="og:image" content="https://osn.sdn1banjar.my.id/images/logo_sekolah.png" />
+    <meta property="og:title" content="Materi & Evaluasi Hijrah Nabi Muhammad SAW Kelas 4" />
+    <meta property="og:description" content="Pembelajaran Interaktif PAI Kelas 4 UPTD SDN 1 Banjar" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
+
+    <style>
+        :root {
+            /* Tema Warna Hijau & Kuning */
+            --hijau-tua: #198754; 
+            --hijau-muda: #20c997;
+            --kuning: #ffc107;
+            --teks-gelap: #1e3a2b;
+        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f4fdf8; color: #212529; }
+        .bg-gradient-custom { background: linear-gradient(135deg, var(--hijau-tua) 0%, var(--hijau-muda) 100%); color: white; }
+        .text-tema { color: var(--hijau-tua); }
+        
+        .btn-custom { background: var(--kuning); color: #212529; border: none; border-radius: 8px; padding: 12px 24px; font-weight: 700; transition: 0.3s; }
+        .btn-custom:hover { background: #e0a800; color: #212529; }
+        .btn-custom:disabled { background: #e9ecef; color: #6c757d; cursor: not-allowed; }
+        
+        .step-section { display: none; animation: fadeIn 0.5s ease; }
+        .step-active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .card-custom { border: none; border-radius: 16px; box-shadow: 0 8px 16px rgba(25, 135, 84, 0.1); border-top: 4px solid var(--kuning); }
+        .question-box { background: #ffffff; border: 1px solid #dee2e6; border-radius: 12px; transition: 0.3s; }
+        .question-box:hover { border-color: var(--hijau-tua); }
+        .form-check-input:checked { background-color: var(--hijau-tua); border-color: var(--hijau-tua); }
+        
+        .yt-wrapper { position: relative; width: 100%; height: 100%; }
+        .yt-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 10; background: transparent; pointer-events: none; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-custom shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#"><i class="fa-solid fa-kaaba me-2 text-warning"></i>PAIBP Kelas 4 - Hijrah Nabi</a>
+            <span class="text-white fw-semibold" id="user-display"></span>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        
+        <div id="step-login" class="step-section step-active">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card card-custom p-4">
+                        <div class="text-center mb-4">
+                            <i class="fa-solid fa-mosque fa-3x text-tema mb-3"></i>
+                            <h3 class="fw-bold mb-1 text-tema">Latihan Asesmen Sumatif Akhir</h3>
+                            <p class="text-muted small">Materi: Kisah Hijrah Nabi Muhammad SAW</p>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Nama Lengkap</label>
+                            <input type="text" id="namaSiswa" class="form-control form-control-lg border-success" placeholder="Masukkan nama...">
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Kelas</label>
+                            <input type="text" id="kelasSiswa" class="form-control form-control-lg border-success" placeholder="Contoh: 4A">
+                        </div>
+                        <button onclick="mulaiBelajar()" class="btn btn-custom w-100 btn-lg shadow-sm" id="btn-mulai">Mulai Belajar <i class="fa-solid fa-arrow-right ms-2"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="step-video1" class="step-section">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card card-custom p-4">
+                        <h4 class="fw-bold text-tema mb-3"><i class="fa-solid fa-play-circle me-2 text-warning"></i>Tahap 1: Membangun Masjid Nabawi</h4>
+                        <div class="alert alert-warning small border-warning">
+                            <i class="fa-solid fa-triangle-exclamation me-1"></i> Tonton video ini sampai selesai tanpa di-skip untuk membuka tombol "Lanjut". Klik area video untuk Play/Pause.
+                        </div>
+                        <div class="ratio ratio-16x9 mb-4 bg-dark rounded overflow-hidden yt-wrapper shadow">
+                            <div id="player1"></div>
+                            <div class="yt-overlay"></div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button class="btn btn-outline-success fw-bold" onclick="toggleFullscreen('player1')"><i class="fa-solid fa-expand"></i> Layar Penuh</button>
+                            <button id="btn-lanjut-vid1" class="btn btn-custom" disabled onclick="keTahap('step-video2', 'materi_video2')">Lanjut ke Video 2 <i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="step-video2" class="step-section">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card card-custom p-4">
+                        <h4 class="fw-bold text-tema mb-3"><i class="fa-solid fa-play-circle me-2 text-warning"></i>Tahap 2: Persaudaraan Muhajirin & Anshar</h4>
+                        <div class="alert alert-warning small border-warning">
+                            <i class="fa-solid fa-triangle-exclamation me-1"></i> Tonton video ini sampai selesai tanpa di-skip untuk membuka tombol "Lanjut ke Materi".
+                        </div>
+                        <div class="ratio ratio-16x9 mb-4 bg-dark rounded overflow-hidden yt-wrapper shadow">
+                            <div id="player2"></div>
+                            <div class="yt-overlay"></div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button class="btn btn-outline-success fw-bold" onclick="toggleFullscreen('player2')"><i class="fa-solid fa-expand"></i> Layar Penuh</button>
+                            <button id="btn-lanjut-vid2" class="btn btn-custom" disabled onclick="keTahap('step-materi', 'materi_baca')">Lanjut ke Materi <i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="step-materi" class="step-section">
+            <div class="card card-custom p-4 p-md-5">
+                <h3 class="fw-bold text-tema text-center mb-4"><i class="fa-solid fa-book-open me-2 text-warning"></i>Ringkasan Materi Hijrah</h3>
+                
+                <div class="alert alert-success small text-center mb-4 border-success">
+                    <i class="fa-solid fa-circle-info me-1"></i> Silakan baca dan <strong>gulir (scroll)</strong> materi ke paling bawah untuk membuka tombol evaluasi.
+                </div>
+
+                <div id="materi-scroll-container" style="max-height: 55vh; overflow-y: auto; padding-right: 10px;">
+                    
+                    <div class="card border-success bg-light mb-4 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="fw-bold text-tema border-bottom border-success pb-2 mb-3">1. Pembangunan Masjid Nabawi</h5>
+                            <ul class="list-group list-group-flush bg-transparent">
+                                <li class="list-group-item bg-transparent border-0 ps-0 d-flex align-items-start">
+                                    <i class="fa-solid fa-check-circle text-warning mt-1 me-2"></i>
+                                    <div>Tahun Hijrahnya Nabi Muhammad saw. dari Mekah ke Madinah dijadikan sebagai awal penanggalan <strong>Kalender Hijriyah</strong> oleh Khalifah Umar bin Khattab.</div>
+                                </li>
+                                <li class="list-group-item bg-transparent border-0 ps-0 d-flex align-items-start">
+                                    <i class="fa-solid fa-check-circle text-warning mt-1 me-2"></i>
+                                    <div>Lokasi pembangunan Masjid Nabawi ditentukan oleh <strong>unta Nabi yang berhenti di pekarangan Abu Ayyub</strong>. Tanah tersebut adalah milik dua anak yatim bernama <strong>Suhail dan Sahil</strong>.</div>
+                                </li>
+                                <li class="list-group-item bg-transparent border-0 ps-0 d-flex align-items-start">
+                                    <i class="fa-solid fa-check-circle text-warning mt-1 me-2"></i>
+                                    <div>Nabi Muhammad saw. <strong>membeli</strong> tanah tersebut, bukan menerimanya secara gratis. Beliau juga ikut mengangkat batu untuk membangun masjid.</div>
+                                </li>
+                                <li class="list-group-item bg-transparent border-0 ps-0 d-flex align-items-start">
+                                    <i class="fa-solid fa-check-circle text-warning mt-1 me-2"></i>
+                                    <div>Fungsi Masjid Nabawi bukan sekadar untuk salat, tetapi juga sebagai <strong>markas dakwah, tempat musyawarah, dan menampung Ahlus Suffah</strong> (kaum Muhajirin yang miskin/tidak punya rumah).</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card border-success bg-light mb-4 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="fw-bold text-tema border-bottom border-success pb-2 mb-3">2. Mempersaudarakan Muhajirin dan Anshar</h5>
+                            <ul class="list-group list-group-flush bg-transparent">
+                                <li class="list-group-item bg-transparent border-0 ps-0 d-flex align-items-start">
+                                    <i class="fa-solid fa-check-circle text-warning mt-1 me-2"></i>
+                                    <div><strong>Kaum Muhajirin:</strong> Orang-orang Mekah yang berhijrah. <br><strong>Kaum Anshar:</strong> Orang-orang asli Madinah yang rela menolong.</div>
+                                </li>
+                                <li class="list-group-item bg-transparent border-0 ps-0 d-flex align-items-start">
+                                    <i class="fa-solid fa-check-circle text-warning mt-1 me-2"></i>
+                                    <div>Kaum Muhajirin mengalami banyak kesulitan karena meninggalkan harta, perbedaan cuaca, dan belum terbiasa bertani (orang Mekah biasanya berdagang).</div>
+                                </li>
+                                <li class="list-group-item bg-transparent border-0 ps-0 d-flex align-items-start">
+                                    <i class="fa-solid fa-check-circle text-warning mt-1 me-2"></i>
+                                    <div>Nabi mempersaudarakan mereka di rumah <strong>Anas bin Malik</strong>. Contohnya, <strong>Abdurrahman bin Auf</strong> (Muhajirin) dipersaudarakan dengan <strong>Sa'ad bin Rabi'</strong> (Anshar yang sangat kaya).</div>
+                                </li>
+                                <li class="list-group-item bg-transparent border-0 ps-0 d-flex align-items-start">
+                                    <i class="fa-solid fa-check-circle text-warning mt-1 me-2"></i>
+                                    <div>Sa'ad menawarkan separuh hartanya, namun Abdurrahman menolak halus dan hanya meminta ditunjukkan arah ke <strong>Pasar Bani Qainuqa'</strong> untuk berdagang.</div>
+                                </li>
+                                <li class="list-group-item bg-transparent border-0 ps-0 d-flex align-items-start">
+                                    <i class="fa-solid fa-check-circle text-warning mt-1 me-2"></i>
+                                    <div>Allah memuji keikhlasan kaum Anshar dalam Al-Qur'an <strong>Surah Al-Hasyr ayat 9</strong>. Sensus penduduk saat itu mencatat sekitar <strong>1.500 umat muslim</strong> di Madinah.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div> 
+                
+                <div class="text-center mt-4 border-top border-success pt-4">
+                    <button id="btn-mulai-kuis" onclick="keTahap('step-kuis', 'materi_kuis'); tampilkanSoal();" class="btn btn-outline-success fw-bold px-5" disabled>
+                        <i class="fa-solid fa-lock me-2" id="icon-kuis"></i> Kerjakan Evaluasi
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="step-kuis" class="step-section">
+            <div class="card card-custom p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4 border-bottom border-success pb-3">
+                    <h4 class="fw-bold text-tema mb-0"><i class="fa-solid fa-list-check me-2 text-warning"></i>Evaluasi Akhir</h4>
+                    <span class="badge bg-success p-2 fs-6" id="kuis-progress">20 PG, 5 Isian</span>
+                </div>
+                
+                <div id="soal-container"></div>
+                
+                <div class="text-center mt-5">
+                    <button class="btn btn-custom btn-lg w-100 shadow" onclick="selesaiKuis()">
+                        <i class="fa-solid fa-paper-plane me-2"></i> Kirim Semua Jawaban
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Supabase Configuration
+        const supabaseUrl = 'https://oisrtlcxdwgvzrxrlzpb.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9pc3J0bGN4ZHdndnpyeHJsenBiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMwMzM3OTEsImV4cCI6MjA3ODYwOTc5MX0.aI162olkIydnJrRxLnC0NsBU9umySmd2nWSTt8Hc1ec';
+        const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+        
+        let recordId = null;
+        let bankSoal = null;
+        let player1, player2;
+
+        // === TAMBAHAN SISTEM ANTI KECURANGAN ===
+        let jumlahPeringatan = parseInt(localStorage.getItem('hijrah_peringatan')) || 0;
+        let isKuisAktif = false; // Deteksi hanya menyala jika murid sudah di tahap Kuis
+
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden && isKuisAktif) {
+                tanganiKecurangan();
+            }
+        });
+
+        function tanganiKecurangan() {
+            jumlahPeringatan++;
+            localStorage.setItem('hijrah_peringatan', jumlahPeringatan);
+
+            if (jumlahPeringatan >= 3) {
+                isKuisAktif = false; // Matikan deteksi
+                Swal.fire({
+                    title: 'Batas Peringatan Habis!',
+                    text: 'Anda terdeteksi keluar dari layar ujian sebanyak 3 kali. Ujian otomatis dikumpulkan.',
+                    icon: 'error',
+                    confirmButtonColor: '#198754',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                }).then(() => {
+                    simpanJawabanLokal();
+                    localStorage.setItem('hijrah_step', 'step-hasil');
+                    window.location.href = 'hasil.html'; // Pindah paksa
+                });
+            } else {
+                Swal.fire({
+                    title: 'Peringatan Kecurangan!',
+                    text: `Anda terdeteksi membuka tab/aplikasi lain! Peringatan ${jumlahPeringatan} dari 3. Jika mencapai 3 kali, ujian akan otomatis disubmit.`,
+                    icon: 'warning',
+                    confirmButtonColor: '#198754',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                });
+            }
+        }
+        // ========================================
+
+        async function muatSoal() {
+            try {
+                const response = await fetch('soal.json');
+                if (!response.ok) throw new Error("Gagal mengambil JSON");
+                bankSoal = await response.json();
+            } catch (error) {
+                Swal.fire('Error', 'Gagal memuat soal. Pastikan menggunakan server lokal/Vercel.', 'error');
+            }
+        }
+        muatSoal();
+
+        window.onload = () => {
+            const savedNama = localStorage.getItem('hijrah_nama');
+            const savedKelas = localStorage.getItem('hijrah_kelas');
+            const savedStep = localStorage.getItem('hijrah_step');
+            recordId = localStorage.getItem('hijrah_recordId');
+            
+            if (savedStep === 'step-hasil') {
+                window.location.href = 'hasil.html';
+                return;
+            }
+
+            if (savedNama && savedKelas && savedStep) {
+                document.getElementById('namaSiswa').value = savedNama;
+                document.getElementById('kelasSiswa').value = savedKelas;
+                document.getElementById('user-display').innerHTML = `<i class="fa-regular fa-user me-1"></i> ${savedNama} (${savedKelas})`;
+                
+                Swal.fire({
+                    title: 'Lanjutkan Sesi?',
+                    text: "Sistem menemukan riwayat belajar Anda yang belum selesai.",
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#198754',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Lanjutkan',
+                    cancelButtonText: 'Mulai Ulang'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        gantiHalaman(savedStep);
+                        if(savedStep === 'step-kuis') {
+                            isKuisAktif = true; // Nyalakan deteksi kecurangan saat resume
+                            tampilkanSoal(true);
+                        }
+                    } else {
+                        localStorage.clear(); // Bersihkan juga peringatan lama
+                        recordId = null;
+                        document.getElementById('namaSiswa').value = '';
+                        document.getElementById('kelasSiswa').value = '';
+                        document.getElementById('user-display').innerHTML = '';
+                    }
+                });
+            }
+        };
+
+        function onYouTubeIframeAPIReady() {
+            player1 = new YT.Player('player1', {
+                videoId: '02i94JnAyGI', 
+                playerVars: { 'controls': 0, 'disablekb': 1, 'rel': 0, 'modestbranding': 1, 'fs': 0 },
+                events: { 'onStateChange': onPlayer1StateChange }
+            });
+            player2 = new YT.Player('player2', {
+                videoId: 'fHtWWCyKPgs', 
+                playerVars: { 'controls': 0, 'disablekb': 1, 'rel': 0, 'modestbranding': 1, 'fs': 0 },
+                events: { 'onStateChange': onPlayer2StateChange }
+            });
+        }
+
+        function onPlayer1StateChange(event) {
+            if (event.data == YT.PlayerState.ENDED) {
+                const btn = document.getElementById('btn-lanjut-vid1');
+                btn.disabled = false;
+                btn.innerHTML = 'Lanjut ke Video 2 <i class="fa-solid fa-arrow-right"></i>';
+            }
+        }
+        function onPlayer2StateChange(event) {
+            if (event.data == YT.PlayerState.ENDED) {
+                const btn = document.getElementById('btn-lanjut-vid2');
+                btn.disabled = false;
+                btn.innerHTML = 'Lanjut ke Materi <i class="fa-solid fa-arrow-right"></i>';
+            }
+        }
+
+        function toggleFullscreen(playerId) {
+            let iframe = document.getElementById(playerId);
+            if (iframe.requestFullscreen) { iframe.requestFullscreen(); }
+            else if (iframe.webkitRequestFullscreen) { iframe.webkitRequestFullscreen(); }
+            else if (iframe.msRequestFullscreen) { iframe.msRequestFullscreen(); }
+        }
+
+        function gantiHalaman(idHalaman) {
+            document.querySelectorAll('.step-section').forEach(el => el.classList.remove('step-active'));
+            document.getElementById(idHalaman).classList.add('step-active');
+            localStorage.setItem('hijrah_step', idHalaman);
+            window.scrollTo(0,0);
+
+            if(idHalaman !== 'step-video1' && player1 && typeof player1.pauseVideo === 'function') player1.pauseVideo();
+            if(idHalaman !== 'step-video2' && player2 && typeof player2.pauseVideo === 'function') player2.pauseVideo();
+        }
+
+        async function mulaiBelajar() {
+            const nama = document.getElementById('namaSiswa').value.trim();
+            const kelas = document.getElementById('kelasSiswa').value.trim();
+
+            if (!nama || !kelas) {
+                Swal.fire('Peringatan', 'Harap isi Nama dan Kelas!', 'warning');
+                return;
+            }
+            if (!bankSoal) {
+                Swal.fire('Tunggu', 'Data soal sedang dimuat...', 'info');
+                return;
+            }
+
+            document.getElementById('btn-mulai').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
+            document.getElementById('btn-mulai').disabled = true;
+
+            localStorage.setItem('hijrah_nama', nama);
+            localStorage.setItem('hijrah_kelas', kelas);
+            document.getElementById('user-display').innerHTML = `<i class="fa-regular fa-user me-1"></i> ${nama} (${kelas})`;
+
+            if(!recordId) {
+                const { data, error } = await supabaseClient
+                    .from('progress_siswa') 
+                    .insert([{ 
+                        nama: nama, 
+                        kelas: kelas, 
+                        materinya: 'Hijrah Nabi', 
+                        progress: 'materi_video1', 
+                        nilai: 0 
+                    }])
+                    .select();
+
+                if (error) {
+                    console.error("Supabase error:", error);
+                    Swal.fire('Peringatan', 'Gagal terhubung ke database. Progress hanya disimpan di perangkat ini.', 'warning');
+                } else if (data && data.length > 0) {
+                    recordId = data[0].id;
+                    localStorage.setItem('hijrah_recordId', recordId);
+                }
+            }
+
+            gantiHalaman('step-video1');
+        }
+
+        async function keTahap(idHalaman, statusProgress) {
+            gantiHalaman(idHalaman);
+            
+            if(recordId) {
+                await supabaseClient.from('progress_siswa').update({ progress: statusProgress }).eq('id', recordId);
+            }
+
+            // Nyalakan deteksi jika dia masuk ke kuis
+            if (idHalaman === 'step-kuis') {
+                isKuisAktif = true;
+            }
+        }
+
+        const materiScroll = document.getElementById('materi-scroll-container');
+        function bukaTombolKuis() {
+            const btnKuis = document.getElementById('btn-mulai-kuis');
+            const iconKuis = document.getElementById('icon-kuis');
+            if (btnKuis.disabled) {
+                btnKuis.disabled = false;
+                btnKuis.classList.remove('btn-outline-success');
+                btnKuis.classList.add('btn-custom');
+                iconKuis.classList.remove('fa-lock');
+                iconKuis.classList.add('fa-pen-to-square');
+            }
+        }
+
+        materiScroll.addEventListener('scroll', function() {
+            if (materiScroll.scrollTop + materiScroll.clientHeight >= materiScroll.scrollHeight - 5) {
+                bukaTombolKuis();
+            }
+        });
+
+        function tampilkanSoal(isResume = false) {
+            const container = document.getElementById('soal-container');
+            let html = `<h5 class="fw-bold text-tema mb-3 mt-2"><i class="fa-regular fa-circle-dot me-2 text-warning"></i>Bagian A: Pilihan Ganda</h5>`;
+            
+            bankSoal.pilihanGanda.forEach((q, index) => {
+                html += `<div class="question-box p-4 mb-4 shadow-sm">
+                    <p class="fw-semibold mb-3">${q.id}. ${q.soal}</p>`;
+                q.opsi.forEach((opt, idx) => {
+                    html += `
+                    <div class="form-check mb-2">
+                        <input class="form-check-input border-success" type="radio" name="pg_${q.id}" id="pg_${q.id}_${idx}" value="${idx}" onchange="simpanJawabanLokal()">
+                        <label class="form-check-label" for="pg_${q.id}_${idx}">${opt}</label>
+                    </div>`;
+                });
+                html += `</div>`;
+            });
+
+            html += `<h5 class="fw-bold text-tema mb-3 mt-5"><i class="fa-solid fa-pen me-2 text-warning"></i>Bagian B: Jawaban Singkat</h5>`;
+            
+            bankSoal.jawabanSingkat.forEach((q, index) => {
+                html += `<div class="question-box p-4 mb-4 shadow-sm">
+                    <p class="fw-semibold mb-3">${q.id}. ${q.soal}</p>
+                    <input type="text" class="form-control border-success" name="jasing_${q.id}" placeholder="Ketik jawaban Anda..." oninput="simpanJawabanLokal()">
+                </div>`;
+            });
+
+            container.innerHTML = html;
+            if(isResume) muatJawabanLokal();
+        }
+
+        function simpanJawabanLokal() {
+            const answers = { pg: {}, jasing: {} };
+            bankSoal.pilihanGanda.forEach(q => {
+                const checked = document.querySelector(`input[name="pg_${q.id}"]:checked`);
+                if (checked) answers.pg[q.id] = checked.value;
+            });
+            bankSoal.jawabanSingkat.forEach(q => {
+                const input = document.querySelector(`input[name="jasing_${q.id}"]`);
+                if (input) answers.jasing[q.id] = input.value;
+            });
+            localStorage.setItem('hijrah_jawaban', JSON.stringify(answers));
+        }
+
+        function muatJawabanLokal() {
+            const saved = localStorage.getItem('hijrah_jawaban');
+            if (saved) {
+                const answers = JSON.parse(saved);
+                for (const [id, val] of Object.entries(answers.pg || {})) {
+                    const r = document.querySelector(`input[name="pg_${id}"][value="${val}"]`);
+                    if(r) r.checked = true;
+                }
+                for (const [id, val] of Object.entries(answers.jasing || {})) {
+                    const t = document.querySelector(`input[name="jasing_${id}"]`);
+                    if(t) t.value = val;
+                }
+            }
+        }
+
+        function selesaiKuis() {
+            simpanJawabanLokal();
+            Swal.fire({
+                title: 'Kirim Jawaban?',
+                text: "Pastikan semua soal sudah terisi dengan benar.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#198754',
+                cancelButtonColor: '#dc3545',
+                confirmButtonText: 'Ya, Kirim'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    isKuisAktif = false; // Matikan deteksi karena ujian selesai secara wajar
+                    localStorage.setItem('hijrah_step', 'step-hasil');
+                    window.location.href = 'hasil.html';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

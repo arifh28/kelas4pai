@@ -1,0 +1,151 @@
+{
+  "pilihanGanda": [
+    {
+      "id": 1,
+      "soal": "Peristiwa hijrahnya Nabi Muhammad saw. dari Mekah ke Madinah dijadikan sebagai awal penanggalan kalender Islam. Kalender tersebut dinamakan kalender...",
+      "opsi": ["Masehi", "Hijriyah", "Saka", "Nusantara"],
+      "jawaban": 1
+    },
+    {
+      "id": 2,
+      "soal": "Siapakah Khalifah yang menetapkan peristiwa hijrah Rasulullah sebagai awal mula perhitungan tahun Hijriyah?",
+      "opsi": ["Abu Bakar as-Siddiq", "Umar bin Khattab", "Utsman bin Affan", "Ali bin Abi Thalib"],
+      "jawaban": 1
+    },
+    {
+      "id": 3,
+      "soal": "Di manakah unta tunggangan Nabi Muhammad saw. berhenti yang kemudian lokasinya dijadikan tempat pembangunan Masjid Nabawi?",
+      "opsi": ["Di depan Ka'bah", "Di depan pekarangan rumah Abu Ayyub", "Di Bukit Shafa", "Di rumah Abu Bakar"],
+      "jawaban": 1
+    },
+    {
+      "id": 4,
+      "soal": "Tanah tempat dibangunnya Masjid Nabawi pada awalnya adalah milik dua anak yatim yang bernama...",
+      "opsi": ["Hasan dan Husein", "Suhail dan Sahil", "Anas dan Malik", "Abu Jahal dan Abu Lahab"],
+      "jawaban": 1
+    },
+    {
+      "id": 5,
+      "soal": "Bagaimana cara Nabi Muhammad saw. mendapatkan tanah milik kedua anak yatim tersebut untuk dibangun masjid?",
+      "opsi": ["Memintanya secara paksa", "Menerimanya sebagai hadiah secara gratis", "Membelinya dengan harga yang disepakati", "Meminjamnya selama 10 tahun"],
+      "jawaban": 2
+    },
+    {
+      "id": 6,
+      "soal": "Sebelum dibangun masjid, tanah tersebut biasa digunakan oleh penduduk setempat untuk...",
+      "opsi": ["Menggembala kambing", "Tempat mengeringkan buah kurma", "Tempat membuang sampah", "Pasar tradisional"],
+      "jawaban": 1
+    },
+    {
+      "id": 7,
+      "soal": "Apa bahan bangunan yang digunakan untuk membuat atap Masjid Nabawi pada masa awal pembangunannya?",
+      "opsi": ["Genteng tanah liat", "Pelepah daun kurma", "Batu bata merah", "Kain sutra"],
+      "jawaban": 1
+    },
+    {
+      "id": 8,
+      "soal": "Di Masjid Nabawi, terdapat kaum Muhajirin yang tinggal di serambi masjid karena tidak memiliki harta dan rumah. Mereka dikenal dengan sebutan...",
+      "opsi": ["Ahlul Bait", "Ahlus Suffah", "Khulafaur Rasyidin", "Assabiqunal Awwalun"],
+      "jawaban": 1
+    },
+    {
+      "id": 9,
+      "soal": "Selain sebagai tempat melaksanakan ibadah salat, fungsi utama dibangunnya Masjid Nabawi pada zaman Nabi adalah untuk...",
+      "opsi": ["Tempat menyembunyikan harta", "Markas dakwah Islam dan musyawarah", "Tempat tidur para raja", "Tempat menyimpan berhala"],
+      "jawaban": 1
+    },
+    {
+      "id": 10,
+      "soal": "Sebutan bagi orang-orang muslim penduduk asli Madinah yang ikhlas menolong Nabi dan orang-orang Mekah adalah kaum...",
+      "opsi": ["Muhajirin", "Anshar", "Quraisy", "Yahudi"],
+      "jawaban": 1
+    },
+    {
+      "id": 11,
+      "soal": "Sebutan bagi orang-orang muslim dari Mekah yang rela meninggalkan harta dan kampung halamannya untuk ikut hijrah bersama Nabi adalah kaum...",
+      "opsi": ["Muhajirin", "Anshar", "Khazraj", "Aus"],
+      "jawaban": 0
+    },
+    {
+      "id": 12,
+      "soal": "Penduduk Mekah umumnya sangat ahli dalam berdagang, sedangkan penduduk asli Madinah umumnya memiliki keahlian dalam bidang...",
+      "opsi": ["Berlayar dan menangkap ikan", "Berperang dan memanah", "Bertani atau berkebun", "Menulis syair"],
+      "jawaban": 2
+    },
+    {
+      "id": 13,
+      "soal": "Di rumah siapakah Nabi Muhammad saw. pertama kali mempersaudarakan antara kaum Muhajirin dan kaum Anshar (sekitar 80 orang)?",
+      "opsi": ["Rumah Abu Bakar as-Siddiq", "Rumah Umar bin Khattab", "Rumah Anas bin Malik", "Rumah Utsman bin Affan"],
+      "jawaban": 2
+    },
+    {
+      "id": 14,
+      "soal": "Salah seorang sahabat dari kaum Anshar yang sangat kaya dan rela menawarkan separuh hartanya untuk saudaranya dari Muhajirin adalah...",
+      "opsi": ["Sa'ad bin Rabi'", "Abu Darda", "Khalid bin Walid", "Salman Al-Farisi"],
+      "jawaban": 0
+    },
+    {
+      "id": 15,
+      "soal": "Siapakah sahabat dari kaum Muhajirin yang menolak dengan halus tawaran harta tersebut dan lebih memilih untuk ditunjukkan letak pasar?",
+      "opsi": ["Ali bin Abi Thalib", "Umar bin Khattab", "Abdurrahman bin Auf", "Zaid bin Tsabit"],
+      "jawaban": 2
+    },
+    {
+      "id": 16,
+      "soal": "Pasar tempat orang-orang Madinah biasa berjual beli yang kemudian didatangi oleh Abdurrahman bin Auf bernama pasar...",
+      "opsi": ["Pasar Ukaz", "Pasar Bani Qainuqa'", "Pasar Madinah", "Pasar Thaybah"],
+      "jawaban": 1
+    },
+    {
+      "id": 17,
+      "soal": "Apa yang dilakukan oleh kaum Anshar yang bekerja di kebun kurma demi membantu kaum Muhajirin yang baru datang?",
+      "opsi": ["Menjual kebunnya dengan harga mahal", "Menawarkan setengah lahan kebun mereka", "Menyembunyikan panen kurmanya", "Membakar kebun agar tidak direbut"],
+      "jawaban": 1
+    },
+    {
+      "id": 18,
+      "soal": "Di dalam Al-Qur'an, Allah Swt. memuji kemuliaan hati dan keikhlasan kaum Anshar yang mengutamakan saudaranya. Pujian tersebut terdapat di dalam surah...",
+      "opsi": ["Al-Baqarah", "Al-Hasyr ayat 9", "Al-Ikhlas", "Al-Fatihah"],
+      "jawaban": 1
+    },
+    {
+      "id": 19,
+      "soal": "Saat pertama kali menetap di Madinah, Nabi Muhammad saw. mengadakan sensus untuk mengetahui jumlah umat muslim. Berapakah jumlah umat muslim di Madinah saat itu?",
+      "opsi": ["Sekitar 100 orang", "Sekitar 500 orang", "Sekitar 1.500 orang", "Sekitar 5.000 orang"],
+      "jawaban": 2
+    },
+    {
+      "id": 20,
+      "soal": "Apa hikmah utama dari peristiwa dipersaudarakannya kaum Muhajirin dan kaum Anshar oleh Rasulullah?",
+      "opsi": ["Persaudaraan atas dasar keimanan mampu mengalahkan/lebih kuat dari persaudaraan sedarah", "Harta benda jauh lebih penting daripada keimanan", "Semua orang Makkah tiba-tiba menjadi kaya raya di Madinah", "Suku Quraisy menjadi suku yang paling berkuasa di seluruh dunia"],
+      "jawaban": 0
+    }
+  ],
+  "jawabanSingkat": [
+    {
+      "id": 21,
+      "soal": "Nama masjid yang pertama kali dibangun oleh Nabi Muhammad saw. beserta para sahabat di pusat kota Madinah adalah...",
+      "kunci": ["nabawi", "masjid nabawi"]
+    },
+    {
+      "id": 22,
+      "soal": "Tanah lokasi pembangunan masjid adalah milik anak yatim. Nabi Muhammad tidak mau menerimanya sebagai hadiah gratis, melainkan dengan cara...",
+      "kunci": ["membeli", "dibeli", "membelinya"]
+    },
+    {
+      "id": 23,
+      "soal": "Orang-orang Makkah yang rela meninggalkan harta dan kampung halamannya untuk berhijrah ke Madinah disebut kaum...",
+      "kunci": ["muhajirin"]
+    },
+    {
+      "id": 24,
+      "soal": "Penduduk asli Madinah yang rela berkorban dan ikhlas menolong kaum yang berhijrah disebut kaum...",
+      "kunci": ["anshar", "ansor"]
+    },
+    {
+      "id": 25,
+      "soal": "Sahabat dari kalangan Anshar yang sangat kaya dan dipersaudarakan dengan Abdurrahman bin Auf bernama...",
+      "kunci": ["sa'ad bin rabi'", "saad bin rabi", "sa'ad bin robi", "saad bin robi"]
+    }
+  ]
+}

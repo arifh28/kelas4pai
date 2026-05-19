@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - PAI Edu</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        :root {
+            --hijau-tua: #198754; 
+            --hijau-muda: #20c997;
+            --kuning: #ffc107;
+        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f4fdf8; }
+        .bg-gradient-custom { background: linear-gradient(135deg, var(--hijau-tua) 0%, var(--hijau-muda) 100%); color: white; }
+        .text-tema { color: var(--hijau-tua); }
+        .btn-custom { background: var(--kuning); color: #212529; border: none; font-weight: bold; }
+        .card-custom { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(25, 135, 84, 0.1); border-top: 4px solid var(--hijau-tua); }
+        .table-hover tbody tr:hover { background-color: #e9ecef; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-custom shadow-sm">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand fw-bold" href="#"><i class="fa-solid fa-user-shield me-2 text-warning"></i>Dashboard Guru</a>
+            <a href="index.html" class="btn btn-sm btn-outline-light"><i class="fa-solid fa-arrow-left me-1"></i> Kembali ke Aplikasi</a>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        
+        <div class="row mb-4 align-items-center">
+            <div class="col-md-5">
+                <h4 class="fw-bold text-tema mb-0">Rekapitulasi Belajar Siswa</h4>
+                <p class="text-muted small mb-0">Pantau progress dan nilai siswa secara real-time.</p>
+            </div>
+            <div class="col-md-7 text-md-end mt-3 mt-md-0 d-flex justify-content-md-end gap-2 flex-wrap">
+                <select id="filterMateri" class="form-select border-success w-auto fw-semibold" onchange="ambilData()">
+                    <option value="semua">Semua Materi</option>
+                    <option value="Hijrah Nabi">Hijrah Nabi (Kelas 4)</option>
+                    <option value="Dakwah Nabi">Dakwah Nabi</option>
+                    <option value="Mukjizat Nabi">Mukjizat Nabi</option>
+                </select>
+                <select id="filterKelas" class="form-select border-success w-auto fw-semibold" onchange="ambilData()">
+                    <option value="semua">Semua Kelas</option>
+                    <option value="3A">Kelas 3A</option>
+                    <option value="4A">Kelas 4A</option>
+                    <option value="4B">Kelas 4B</option>
+                    <option value="4C">Kelas 4C</option>
+                </select>
+                <button onclick="ambilData()" class="btn btn-custom shadow-sm">
+                    <i class="fa-solid fa-arrows-rotate me-1"></i> Refresh
+                </button>
+            </div>
+        </div>
+
+        <div class="card card-custom overflow-hidden">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="px-4 py-3">No</th>
+                            <th class="py-3">Waktu Mulai</th>
+                            <th class="py-3">Nama Siswa</th>
+                            <th class="py-3">Materi</th>
+                            <th class="py-3 text-center">Kelas</th>
+                            <th class="py-3">Progress Saat Ini</th>
+                            <th class="py-3 text-center">Nilai</th>
+                            <th class="py-3 text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabel-body">
+                        <tr>
+                            <td colspan="8" class="text-center py-5 text-muted">
+                                <i class="fa-solid fa-circle-notch fa-spin fa-2x mb-2 text-success"></i><br>
+                                Mengambil data...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Konfigurasi Supabase
+        const supabaseUrl = 'https://oisrtlcxdwgvzrxrlzpb.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9pc3J0bGN4ZHdndnpyeHJsenBiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMwMzM3OTEsImV4cCI6MjA3ODYwOTc5MX0.aI162olkIydnJrRxLnC0NsBU9umySmd2nWSTt8Hc1ec';
+        const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        function formatWaktu(isoString) {
+            const date = new Date(isoString);
+            return date.toLocaleString('id-ID', { 
+                day: '2-digit', month: 'short', year: 'numeric',
+                hour: '2-digit', minute: '2-digit'
+            });
+        }
+
+        function terjemahkanProgress(status) {
+            switch(status) {
+                case 'materi_video1': return '<span class="badge bg-secondary">Menonton Video 1</span>';
+                case 'materi_video2': return '<span class="badge bg-info text-dark">Menonton Video 2</span>';
+                case 'materi_video': return '<span class="badge bg-info text-dark">Menonton Video</span>';
+                case 'materi_baca': return '<span class="badge bg-primary">Membaca Materi</span>';
+                case 'materi_kuis': return '<span class="badge bg-warning text-dark">Mengerjakan Kuis</span>';
+                case 'materi_selesai': return '<span class="badge bg-success"><i class="fa-solid fa-check-circle me-1"></i> Selesai</span>';
+                default: return `<span class="badge bg-light text-dark">${status}</span>`;
+            }
+        }
+
+        async function ambilData() {
+            const tabelBody = document.getElementById('tabel-body');
+            const kelasDipilih = document.getElementById('filterKelas').value;
+            const materiDipilih = document.getElementById('filterMateri').value;
+            
+            tabelBody.innerHTML = `<tr><td colspan="8" class="text-center py-5 text-muted"><i class="fa-solid fa-circle-notch fa-spin fa-2x mb-2 text-success"></i><br>Mengambil data...</td></tr>`;
+
+            try {
+                // Mengambil dari tabel progress_siswa (sesuai query SQL yang baru dibuat)
+                let query = supabaseClient
+                    .from('progress_siswa')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (kelasDipilih !== 'semua') {
+                    query = query.eq('kelas', kelasDipilih);
+                }
+                if (materiDipilih !== 'semua') {
+                    query = query.eq('materinya', materiDipilih);
+                }
+
+                const { data, error } = await query;
+
+                if (error) throw error;
+
+                if (data.length === 0) {
+                    tabelBody.innerHTML = `<tr><td colspan="8" class="text-center py-5 text-muted"><i class="fa-solid fa-folder-open fa-2x mb-2 text-success"></i><br>Belum ada data siswa untuk filter ini.</td></tr>`;
+                    return;
+                }
+
+                let barisHTML = '';
+                data.forEach((siswa, index) => {
+                    let kelasNilai = 'fw-bold';
+                    let nilaiDitampilkan = '-';
+
+                    if (siswa.progress === 'materi_selesai') {
+                        nilaiDitampilkan = siswa.nilai;
+                        kelasNilai += siswa.nilai < 70 ? ' text-danger' : ' text-success';
+                    }
+
+                    barisHTML += `
+                        <tr>
+                            <td class="px-4 fw-medium text-muted">${index + 1}</td>
+                            <td class="small">${formatWaktu(siswa.created_at)}</td>
+                            <td class="fw-bold">${siswa.nama}</td>
+                            <td><span class="badge bg-light text-success border border-success">${siswa.materinya || 'Belum Diatur'}</span></td>
+                            <td class="text-center"><span class="badge border border-secondary text-secondary bg-transparent">${siswa.kelas}</span></td>
+                            <td>${terjemahkanProgress(siswa.progress)}</td>
+                            <td class="text-center fs-5 ${kelasNilai}">${nilaiDitampilkan}</td>
+                            <td class="text-center">
+                                <button onclick="hapusData('${siswa.id}', '${siswa.nama}')" class="btn btn-sm btn-outline-danger" title="Hapus Data">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                tabelBody.innerHTML = barisHTML;
+
+            } catch (error) {
+                console.error('Error:', error);
+                tabelBody.innerHTML = `<tr><td colspan="8" class="text-center py-5 text-danger"><i class="fa-solid fa-triangle-exclamation fa-2x mb-2"></i><br>Gagal mengambil data. Periksa koneksi internet atau Supabase.</td></tr>`;
+            }
+        }
+
+        function hapusData(idSiswa, namaSiswa) {
+            Swal.fire({
+                title: 'Hapus Data?',
+                text: `Apakah Anda yakin ingin menghapus data milik ${namaSiswa}?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        const { error } = await supabaseClient
+                            .from('progress_siswa')
+                            .delete()
+                            .eq('id', idSiswa);
+
+                        if (error) throw error;
+
+                        Swal.fire('Terhapus!', `Data ${namaSiswa} berhasil dihapus.`, 'success');
+                        ambilData();
+                    } catch (error) {
+                        console.error('Error delete:', error);
+                        Swal.fire('Gagal!', 'Terjadi kesalahan saat menghapus data.', 'error');
+                    }
+                }
+            });
+        }
+
+        window.onload = ambilData;
+
+    </script>
+</body>
+</html>
