@@ -138,8 +138,12 @@
             reviewHTML += '<h5 class="fw-bold mt-5 text-tema">B. Jawaban Singkat</h5>';
             
             bankSoal.jawabanSingkat.forEach(q => {
-                let userAns = answers.jasing[q.id] ? answers.jasing[q.id].trim().toLowerCase() : '';
-                let isCorrect = q.kunci.includes(userAns);
+                let userAns = answers.jasing[q.id] ? answers.jasing[q.id].trim().toLowerCase() : '';                
+                userAns = userAns.replace(/[`’‘']/g, "");
+                let isCorrect = q.kunci.some(k => {
+                    let kunciBersih = k.trim().toLowerCase().replace(/[`’‘']/g, "");
+                    return userAns.includes(kunciBersih);
+                });
                 if (isCorrect) benarJasing++;
 
                 let userText = userAns !== '' ? answers.jasing[q.id] : '<i>Tidak dijawab</i>';
