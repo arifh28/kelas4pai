@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasil Ujian - PAI Kelas 4</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f0f4f8; }
+        .card { border: none; border-radius: 15px; box-shadow: 0 10px 30px rgba(13, 110, 253, 0.1); }
+        .score-display { font-size: 80px; font-weight: 800; color: #0d6efd; line-height: 1; }
+        .icon-trophy { font-size: 60px; color: #ffc107; }
+    </style>
+</head>
+<body class="py-5 d-flex align-items-center min-vh-100">
+
+    <div class="container text-center" style="max-width: 500px;">
+        <div class="card p-5 border-0">
+            <div class="mb-4">
+                <i class="fa-solid fa-trophy icon-trophy mb-3"></i>
+                <h2 class="fw-bold text-dark">Ujian Selesai!</h2>
+                <p class="text-muted fs-5 mb-0"><span id="resNama" class="fw-bold text-dark"></span></p>
+                <p class="text-muted">Kelas <span id="resKelas" class="fw-bold text-dark"></span></p>
+            </div>
+            
+            <div class="bg-primary-subtle p-4 rounded-4 mb-4">
+                <p class="text-primary fw-bold mb-2 fs-5">Nilai Akhir Anda</p>
+                <div class="score-display" id="finalScore">...</div>
+            </div>
+
+            <div id="statusMsg" class="alert alert-info fw-semibold border-0">
+                <i class="fa-solid fa-spinner fa-spin me-2"></i> Menghitung dan menyimpan nilai...
+            </div>
+
+            <button onclick="window.location.href='index.html'" class="btn btn-primary btn-lg w-100 fw-bold mt-2">
+                <i class="fa-solid fa-house me-2"></i> Kembali ke Beranda
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const supabaseUrl = 'https://oisrtlcxdwgvzrxrlzpb.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9pc3J0bGN4ZHdndnpyeHJsenBiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMwMzM3OTEsImV4cCI6MjA3ODYwOTc5MX0.aI162olkIydnJrRxLnC0NsBU9umySmd2nWSTt8Hc1ec';
+        const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        const nama = localStorage.getItem('siswa_nama');
+        const kelas = localStorage.getItem('siswa_kelas');
+        const answers = JSON.parse(localStorage.getItem('jawaban_ujian_k4')) || {};
+
+        if(!nama) window.location.href = 'index.html';
+
+        document.getElementById('resNama').innerText = nama;
+        document.getElementById('resKelas').innerText = kelas;
+
+        function normalizeText(text) {
+            return String(text).toLowerCase().replace(/[^a-z0-9]/gi, '');
+        }
+
+        fetch('soal.json')
+            .then(res => res.json())
+            .then(async (questions) => {
+                let totalNilai = 0;
+
+                questions.forEach(q => {
+                    const userAns = answers[q.id];
+                    if(userAns !== undefined && String(userAns).trim() !== '') {
+                        if(q.type === 'pg') {
+                            if(parseInt(userAns) === q.c) totalNilai += 2; // PG = 2 Poin
+                        } else if (q.type === 'essay') {
+                            if(normalizeText(userAns).includes(normalizeText(q.k))) {
+                                totalNilai += 8; // Uraian = 8 Poin
+                            }
+                        }
+                    }
+                });
+
+                document.getElementById('finalScore').innerText = totalNilai;
+
+                try {
+                    const { data, error } = await supabaseClient
+                        .from('kelas4asat')
+                        .insert([{ nama: nama, kelas: kelas, nilai: totalNilai }]);
+                    
+                    if(error) throw error;
+                    
+                    const statusEl = document.getElementById('statusMsg');
+                    statusEl.className = "alert alert-success fw-semibold border-0";
+                    statusEl.innerHTML = '<i class="fa-solid fa-circle-check me-2"></i> Nilai berhasil disimpan!';
+                    
+                    localStorage.removeItem('jawaban_ujian_k4');
+                    
+                } catch (err) {
+                    console.error(err);
+                    const statusEl = document.getElementById('statusMsg');
+                    statusEl.className = "alert alert-danger fw-semibold border-0";
+                    statusEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation me-2"></i> Gagal menyimpan ke database.';
+                }
+            });
+    </script>
+</body>
+</html>
