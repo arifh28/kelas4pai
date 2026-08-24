@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentasi Asmaul Husna</title>
+    
+    <!-- Plus Jakarta Sans Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f4f7f6;
+            color: #2b2b2b;
+        }
+        
+        /* Palet Warna */
+        .bg-blue-bright { background-color: #00A8E8 !important; color: #ffffff; }
+        .bg-yellow-bright { background-color: #FFEA00 !important; color: #1a1a1a; }
+        .text-blue-bright { color: #00A8E8 !important; }
+        .text-yellow-bright { color: #d4c300 !important; }
+        
+        /* Navigasi */
+        .navbar-custom {
+            background-color: #00A8E8;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .nav-link { cursor: pointer; color: white !important; font-weight: 600; }
+        .nav-link:hover, .nav-link.active { color: #FFEA00 !important; }
+
+        /* SPA Layout */
+        .page-section {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        .page-section.active { display: block; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Kartu & Elemen UI */
+        .card-custom {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        .icon-circle {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 2rem;
+            margin: 0 auto;
+        }
+        .story-box {
+            border-left: 5px solid #00A8E8;
+            background-color: #e6f7ff;
+            padding: 15px;
+            border-radius: 0 10px 10px 0;
+        }
+        .subject-box {
+            border-left: 5px solid #FFEA00;
+            background-color: #fffde6;
+            padding: 15px;
+            border-radius: 0 10px 10px 0;
+        }
+        .btn-custom {
+            border-radius: 50px;
+            font-weight: 700;
+            padding: 10px 25px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
+        <div class="container">
+            <a class="navbar-brand text-white fw-bold" href="#" onclick="showPage('home')">
+                <i class="fa-solid fa-star text-yellow-bright me-2"></i>Mengenal Asmaul Husna
+            </a>
+            <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" onclick="showPage('ghaffar')">Al-Ghaffar</a></li>
+                    <li class="nav-item"><a class="nav-link" onclick="showPage('wahhab')">Al-Wahhab</a></li>
+                    <li class="nav-item"><a class="nav-link" onclick="showPage('fattah')">Al-Fattah</a></li>
+                    <li class="nav-item"><a class="nav-link" onclick="showPage('latif')">Al-Latif</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        
+        <!-- Halaman Utama (Home) -->
+        <div id="home" class="page-section active text-center">
+            <h1 class="fw-extrabold mb-3">Selamat Datang!</h1>
+            <p class="lead mb-5">Mari kita belajar 4 Asmaul Husna, maknanya, ceritanya, dan hubungannya dengan pelajaran sekolah.</p>
+            
+            <div class="row g-4 justify-content-center">
+                <div class="col-md-5">
+                    <div class="card card-custom bg-blue-bright text-white p-4 text-center h-100" style="cursor:pointer;" onclick="showPage('ghaffar')">
+                        <h3 class="fw-bold">Al-Ghaffar</h3>
+                        <p class="mb-0 text-white-50">Maha Pengampun</p>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="card card-custom bg-yellow-bright p-4 text-center h-100" style="cursor:pointer;" onclick="showPage('wahhab')">
+                        <h3 class="fw-bold">Al-Wahhab</h3>
+                        <p class="mb-0 text-muted">Maha Pemberi Karunia</p>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="card card-custom bg-yellow-bright p-4 text-center h-100" style="cursor:pointer;" onclick="showPage('fattah')">
+                        <h3 class="fw-bold">Al-Fattah</h3>
+                        <p class="mb-0 text-muted">Maha Pembuka Rahmat</p>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="card card-custom bg-blue-bright text-white p-4 text-center h-100" style="cursor:pointer;" onclick="showPage('latif')">
+                        <h3 class="fw-bold">Al-Latif</h3>
+                        <p class="mb-0 text-white-50">Maha Lembut</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Al-Ghaffar -->
+        <div id="ghaffar" class="page-section">
+            <div class="card card-custom p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <div class="icon-circle bg-blue-bright text-white mb-3">
+                        <i class="fa-solid fa-hands-holding-circle"></i>
+                    </div>
+                    <h2 class="fw-bold">Al-Ghaffar (Maha Pengampun)</h2>
+                </div>
+                <p>Allah terus-menerus memberikan ampunan kepada hamba-Nya yang sungguh-sungguh bertaubat, tidak peduli seberapa banyak kesalahan yang telah dilakukan.</p>
+                
+                <h5 class="fw-bold mt-4"><i class="fa-solid fa-book-open text-blue-bright me-2"></i>Cerita Pendek</h5>
+                <div class="story-box mb-4">
+                    <p class="mb-0">Andi tidak sengaja mematahkan penggaris Budi saat meminjamnya. Walaupun takut, Andi berani jujur dan meminta maaf. Budi, meneladani sifat pemaaf, tersenyum dan memaafkan Andi. Persahabatan mereka pun kembali utuh.</p>
+                </div>
+
+                <h5 class="fw-bold"><i class="fa-solid fa-link text-yellow-bright me-2"></i>Sambungan Pelajaran: PPKn</h5>
+                <div class="subject-box">
+                    <p class="mb-0">Sifat pemaaf sangat erat dengan pelajaran <strong>PPKn (Sila ke-3: Persatuan Indonesia)</strong>. Meminta maaf dan memaafkan adalah kunci menjaga kerukunan dan persatuan di lingkungan sekolah dan masyarakat.</p>
+                </div>
+                <button class="btn btn-custom bg-yellow-bright mt-4" onclick="showPage('home')"><i class="fa-solid fa-arrow-left me-2"></i>Kembali</button>
+            </div>
+        </div>
+
+        <!-- Al-Wahhab -->
+        <div id="wahhab" class="page-section">
+            <div class="card card-custom p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <div class="icon-circle bg-yellow-bright mb-3">
+                        <i class="fa-solid fa-gift"></i>
+                    </div>
+                    <h2 class="fw-bold">Al-Wahhab (Maha Pemberi Karunia)</h2>
+                </div>
+                <p>Allah memberikan rezeki, bakat, dan nikmat kepada seluruh makhluk-Nya tanpa batas dan tanpa mengharapkan imbalan apa pun.</p>
+                
+                <h5 class="fw-bold mt-4"><i class="fa-solid fa-book-open text-blue-bright me-2"></i>Cerita Pendek</h5>
+                <div class="story-box mb-4">
+                    <p class="mb-0">Rina menemukan bahwa ia sangat pandai menggambar tanpa harus belajar susah payah. Ia sadar bahwa bakat seninya adalah karunia gratis dari Allah. Ia pun bersyukur dan rajin menggambar pemandangan alam untuk menghiasi kelasnya.</p>
+                </div>
+
+                <h5 class="fw-bold"><i class="fa-solid fa-link text-yellow-bright me-2"></i>Sambungan Pelajaran: SBdP & IPA</h5>
+                <div class="subject-box">
+                    <p class="mb-0">Dalam <strong>SBdP (Seni Budaya dan Prakarya)</strong>, kita belajar mengembangkan karunia bakat yang diberikan Tuhan. Dalam <strong>IPA</strong>, kita melihat contoh nyata karunia Allah: sinar matahari yang bersinar setiap hari secara gratis untuk membantu tumbuhan berfotosintesis.</p>
+                </div>
+                <button class="btn btn-custom bg-blue-bright text-white mt-4" onclick="showPage('home')"><i class="fa-solid fa-arrow-left me-2"></i>Kembali</button>
+            </div>
+        </div>
+
+        <!-- Al-Fattah -->
+        <div id="fattah" class="page-section">
+            <div class="card card-custom p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <div class="icon-circle bg-blue-bright text-white mb-3">
+                        <i class="fa-solid fa-door-open"></i>
+                    </div>
+                    <h2 class="fw-bold">Al-Fattah (Maha Pembuka Rahmat)</h2>
+                </div>
+                <p>Allah adalah pembuka segala pintu kebaikan, pembuka jalan keluar dari kesulitan, dan pembuka hati hamba-Nya untuk menerima ilmu.</p>
+                
+                <h5 class="fw-bold mt-4"><i class="fa-solid fa-book-open text-blue-bright me-2"></i>Cerita Pendek</h5>
+                <div class="story-box mb-4">
+                    <p class="mb-0">Toni hampir menyerah karena tidak bisa menyelesaikan tugas pecahan. Ia berhenti sejenak, berdoa memohon petunjuk, lalu mencoba rumus baru yang diajarkan guru. Tiba-tiba, ia paham! Allah membuka pintu pemahamannya.</p>
+                </div>
+
+                <h5 class="fw-bold"><i class="fa-solid fa-link text-yellow-bright me-2"></i>Sambungan Pelajaran: Matematika</h5>
+                <div class="subject-box">
+                    <p class="mb-0">Dalam pelajaran <strong>Matematika</strong>, setiap soal sesulit apa pun selalu memiliki "kunci" atau rumus untuk membukanya. Ini mengajarkan kita pantang menyerah mencari jalan keluar, seperti memohon kepada Al-Fattah.</p>
+                </div>
+                <button class="btn btn-custom bg-yellow-bright mt-4" onclick="showPage('home')"><i class="fa-solid fa-arrow-left me-2"></i>Kembali</button>
+            </div>
+        </div>
+
+        <!-- Al-Latif -->
+        <div id="latif" class="page-section">
+            <div class="card card-custom p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <div class="icon-circle bg-yellow-bright mb-3">
+                        <i class="fa-solid fa-leaf"></i>
+                    </div>
+                    <h2 class="fw-bold">Al-Latif (Maha Lembut)</h2>
+                </div>
+                <p>Allah mengetahui hal-hal yang paling detail dan tersembunyi. Ia merawat makhluk-Nya dengan cara yang sangat halus dan penuh kelembutan.</p>
+                
+                <h5 class="fw-bold mt-4"><i class="fa-solid fa-book-open text-blue-bright me-2"></i>Cerita Pendek</h5>
+                <div class="story-box mb-4">
+                    <p class="mb-0">Siswa-siswa mengamati seekor semut kecil yang sedang mengangkat remah roti. Semut itu sangat kecil, namun ia memiliki mata, kaki, dan sistem tubuh yang sempurna. Allah yang Maha Lembut menciptakan struktur tubuh semut dengan sangat detail.</p>
+                </div>
+
+                <h5 class="fw-bold"><i class="fa-solid fa-link text-yellow-bright me-2"></i>Sambungan Pelajaran: IPA (Biologi)</h5>
+                <div class="subject-box">
+                    <p class="mb-0">Di pelajaran <strong>IPA</strong>, ketika kita belajar tentang mikroskop atau struktur tubuh serangga kecil, kita sedang menyaksikan bukti nyata sifat Al-Latif. Allah merancang dan memelihara ekosistem mikroskopis yang tidak terlihat oleh mata biasa.</p>
+                </div>
+                <button class="btn btn-custom bg-blue-bright text-white mt-4" onclick="showPage('home')"><i class="fa-solid fa-arrow-left me-2"></i>Kembali</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- SPA Logic -->
+    <script>
+        function showPage(pageId) {
+            // Sembunyikan semua section
+            document.querySelectorAll('.page-section').forEach(function(section) {
+                section.classList.remove('active');
+            });
+            // Tampilkan section yang dipilih
+            document.getElementById(pageId).classList.add('active');
+            
+            // Perbarui warna menu navigasi
+            document.querySelectorAll('.nav-link').forEach(function(link) {
+                link.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+
+            // Scroll ke atas dengan halus
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
