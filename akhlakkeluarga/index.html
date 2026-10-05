@@ -46,7 +46,7 @@
 
         /* UI Optimization for IFP */
         button, .nav-item, .form-check-label, .emoticon-btn, .quiz-option, .game-dot {
-            touch-action: none; /* Penting untuk interaksi drag-and-drop game */
+            touch-action: none; 
             cursor: pointer;
         }
         .card {
@@ -104,7 +104,8 @@
             border: 2px solid #dee2e6;
             transition: all 0.2s ease;
         }
-        .quiz-option:active, .quiz-option.selected {
+        /* Style diubah dinamis oleh JS saat feedback */
+        .quiz-option.active-hover:active, .quiz-option.selected {
             background-color: var(--light-blue);
             border-color: var(--primary-blue);
             color: var(--primary-blue);
@@ -142,7 +143,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none; /* SVG tidak memblokir sentuhan */
+            pointer-events: none; 
             z-index: 10;
         }
         .game-item {
@@ -279,7 +280,7 @@
                                 <img src="image_99d8de.png" alt="Pengertian Keluarga" class="img-fluid img-materi shadow-sm mb-4 mx-auto">
                                 <h3 class="text-primary title-text mb-3 fs-2">1. Pengertian Keluarga</h3>
                                 <p class="fs-3 px-5" style="line-height: 1.8;">
-                                    Keluarga adalah kelompok terkecil dalam masyarakat yang terdiri atas ayah, ibu, dan anak-anak yang hidup bersama dalam satu rumah karena adanya ikatan darah, perkawinan, atau adopsi[cite: 2].
+                                    Keluarga adalah kelompok terkecil dalam masyarakat yang terdiri atas ayah, ibu, dan anak-anak yang hidup bersama dalam satu rumah karena adanya ikatan darah, perkawinan, atau adopsi.
                                 </p>
                             </div>
                         </div>
@@ -291,11 +292,11 @@
                                 <h3 class="text-primary title-text mb-3 fs-2">2. Anggota Keluarga</h3>
                                 <div class="d-flex justify-content-center">
                                     <ul class="fs-3 text-start d-inline-block" style="line-height: 2;">
-                                        <li>Ayah dan Ibu[cite: 3]</li>
-                                        <li>Kakak dan Adik[cite: 3]</li>
-                                        <li>Kakek dan Nenek[cite: 3]</li>
-                                        <li>Paman, Bibi, dan Sepupu[cite: 3]</li>
-                                        <li>Anggota keluarga lainnya[cite: 3]</li>
+                                        <li>Ayah dan Ibu</li>
+                                        <li>Kakak dan Adik</li>
+                                        <li>Kakek dan Nenek</li>
+                                        <li>Paman, Bibi, dan Sepupu</li>
+                                        <li>Anggota keluarga lainnya</li>
                                     </ul>
                                 </div>
                             </div>
@@ -308,12 +309,12 @@
                                 <h3 class="text-primary title-text mb-3 fs-2">3. Contoh Akhlak Terhadap Keluarga</h3>
                                 <div class="d-flex justify-content-center">
                                     <ul class="fs-3 text-start d-inline-block" style="line-height: 1.8;">
-                                        <li>Berbakti dan taat kepada orang tua[cite: 4]</li>
-                                        <li>Menghormati dan menyayangi semua anggota keluarga[cite: 4]</li>
-                                        <li>Membantu pekerjaan rumah[cite: 4]</li>
-                                        <li>Berbicara dengan sopan[cite: 4]</li>
-                                        <li>Mendoakan kebaikan untuk keluarga[cite: 4]</li>
-                                        <li>Menjaga nama baik keluarga[cite: 4]</li>
+                                        <li>Berbakti dan taat kepada orang tua</li>
+                                        <li>Menghormati dan menyayangi semua anggota keluarga</li>
+                                        <li>Membantu pekerjaan rumah</li>
+                                        <li>Berbicara dengan sopan</li>
+                                        <li>Mendoakan kebaikan untuk keluarga</li>
+                                        <li>Menjaga nama baik keluarga</li>
                                     </ul>
                                 </div>
                             </div>
@@ -326,11 +327,11 @@
                                 <h3 class="text-primary title-text mb-3 fs-2">4. Manfaat Akhlak Terhadap Keluarga</h3>
                                 <div class="d-flex justify-content-center">
                                     <ul class="fs-3 text-start d-inline-block" style="line-height: 1.8;">
-                                        <li>Keluarga menjadi harmonis dan bahagia[cite: 5]</li>
-                                        <li>Tumbuh rasa cinta dan kasih sayang[cite: 5]</li>
-                                        <li>Mendapat ridha Allah Swt.[cite: 5]</li>
-                                        <li>Hidup lebih tenang dan tenteram[cite: 5]</li>
-                                        <li>Menjadi pribadi yang baik di mata keluarga dan orang lain[cite: 5]</li>
+                                        <li>Keluarga menjadi harmonis dan bahagia</li>
+                                        <li>Tumbuh rasa cinta dan kasih sayang</li>
+                                        <li>Mendapat ridha Allah Swt.</li>
+                                        <li>Hidup lebih tenang dan tenteram</li>
+                                        <li>Menjadi pribadi yang baik di mata keluarga dan orang lain</li>
                                     </ul>
                                 </div>
                             </div>
@@ -343,11 +344,11 @@
                                 <h3 class="text-primary title-text mb-3 fs-2">5. Akibat Tidak Berakhlak Terhadap Keluarga</h3>
                                 <div class="d-flex justify-content-center">
                                     <ul class="fs-3 text-start d-inline-block text-danger" style="line-height: 1.8;">
-                                        <li>Keluarga mudah bertengkar dan tidak harmonis[cite: 6]</li>
-                                        <li>Hubungan menjadi renggang dan tidak akur[cite: 6]</li>
-                                        <li>Tidak mendapatkan ridha Allah Swt.[cite: 6]</li>
-                                        <li>Hati menjadi gelisah dan hidup tidak tenang[cite: 6]</li>
-                                        <li>Menyesal di kemudian hari[cite: 6]</li>
+                                        <li>Keluarga mudah bertengkar dan tidak harmonis</li>
+                                        <li>Hubungan menjadi renggang dan tidak akur</li>
+                                        <li>Tidak mendapatkan ridha Allah Swt.</li>
+                                        <li>Hati menjadi gelisah dan hidup tidak tenang</li>
+                                        <li>Menyesal di kemudian hari</li>
                                     </ul>
                                 </div>
                             </div>
@@ -360,14 +361,14 @@
                                 <h3 class="text-primary title-text mb-3 fs-2">6. Perilaku dalam Kehidupan Sehari-hari</h3>
                                 <div class="d-flex justify-content-center">
                                     <ul class="fs-3 text-start d-inline-block" style="line-height: 1.8;">
-                                        <li>Bangun pagi dan memberi salam kepada orang tua[cite: 7]</li>
-                                        <li>Membantu merapikan tempat tidur dan kebersihan rumah[cite: 7]</li>
-                                        <li>Membantu menyiapkan makanan atau minuman[cite: 7]</li>
-                                        <li>Belajar rajin agar membanggakan keluarga[cite: 7]</li>
-                                        <li>Mendengarkan nasihat orang tua dengan baik[cite: 7]</li>
-                                        <li>Meluangkan waktu berkualitas bersama keluarga[cite: 7]</li>
-                                        <li>Selalu berbicara sopan dan tidak membantah[cite: 7]</li>
-                                        <li>Mengucapkan terima kasih atas kebaikan keluarga[cite: 7]</li>
+                                        <li>Bangun pagi dan memberi salam kepada orang tua</li>
+                                        <li>Membantu merapikan tempat tidur dan kebersihan rumah</li>
+                                        <li>Membantu menyiapkan makanan atau minuman</li>
+                                        <li>Belajar rajin agar membanggakan keluarga</li>
+                                        <li>Mendengarkan nasihat orang tua dengan baik</li>
+                                        <li>Meluangkan waktu berkualitas bersama keluarga</li>
+                                        <li>Selalu berbicara sopan dan tidak membantah</li>
+                                        <li>Mengucapkan terima kasih atas kebaikan keluarga</li>
                                     </ul>
                                 </div>
                             </div>
@@ -442,17 +443,35 @@
         <!-- HALAMAN LATIHAN SOAL -->
         <section id="page-latihan" class="page-section d-none">
             <div class="card p-5 mx-auto shadow" style="max-width: 1000px; min-height: 70vh; display: flex; flex-direction: column; justify-content: center;">
+                
+                <!-- Area Kuis Aktif -->
                 <div id="quiz-container">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h2 class="text-primary title-text m-0 fs-1">Latihan Soal</h2>
                         <span id="quiz-progress" class="badge bg-primary fs-4 py-2 px-3 rounded-pill">Soal 1 dari 10</span>
                     </div>
+                    
                     <div class="mb-5 mt-4">
                         <p id="quiz-question" class="fs-2 fw-bold mb-5 lh-base">Pertanyaan muncul di sini...</p>
-                        <div id="quiz-options-container"></div>
+                        <div id="quiz-options-container">
+                            <!-- Tombol opsi digenerate via JS -->
+                        </div>
+                        
+                        <!-- Area Feedback Benar/Salah -->
+                        <div id="quiz-feedback-container" class="mt-4 d-none text-center">
+                            <!-- Pesan feedback masuk ke sini -->
+                        </div>
+                        
+                        <!-- Tombol Lanjut Soal -->
+                        <div class="text-center mt-4">
+                            <button id="btn-next-question" class="btn btn-primary btn-lg py-3 px-5 rounded-pill fs-3 shadow d-none" onclick="soalSelanjutnya()">
+                                Soal Selanjutnya <span class="material-icons align-middle ms-2">arrow_forward</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
+                <!-- Area Hasil Akhir Kuis -->
                 <div id="quiz-result" class="d-none text-center py-5">
                     <span class="material-icons text-success mb-3" style="font-size: 100px;">military_tech</span>
                     <h2 class="text-primary title-text display-4 mb-3">Latihan Selesai!</h2>
@@ -518,31 +537,15 @@
 
     <script>
         // ==========================================
-        // 1. DATA GAME TARIK BENANG (Berdasarkan Screenshot)[cite: 8]
+        // 1. DATA GAME TARIK BENANG
         // ==========================================
-        const gameData = [
-            // Layar 1 (4 Pasang)
-            { lId: 1, textL: "Membantu ibu mencuci piring.", rId: 101, textR: "Rumah menjadi bersih dan nyaman.", correct: 101, screen: 1 }, //[cite: 8]
-            { lId: 2, textL: "Menghormati orang tua.", rId: 102, textR: "Mendapat rida Allah Swt. dan pahala.", correct: 102, screen: 1 }, //[cite: 8]
-            { lId: 3, textL: "Berkata jujur kepada keluarga.", rId: 103, textR: "Orang tua senang dan doa-doanya mudah dikabulkan.", correct: 104, screen: 1 }, // Note: Mapped strictly to logic below
-            { lId: 4, textL: "Merapikan tempat tidur sendiri.", rId: 104, textR: "Dipercaya oleh keluarga dan dicintai.", correct: 105, screen: 1 }, // Adjusted below for perfect game pairing
-            
-            // Layar 2 (4 Pasang)
-            { lId: 5, textL: "Melayani orang tua dengan baik.", rId: 105, textR: "Keluarga hidup rukun dan bahagia.", correct: 103, screen: 2 },
-            { lId: 6, textL: "Mendoakan orang tua setiap hari.", rId: 106, textR: "Terbiasa hidup mandiri dan bertanggung jawab.", correct: 102, screen: 2 }, 
-            { lId: 7, textL: "Menjaga kebersihan rumah.", rId: 107, textR: "Membuat hati tenang dan hubungan semakin harmonis.", correct: 101, screen: 2 }, 
-            { lId: 8, textL: "Menyayangi saudara dengan tulus.", rId: 108, textR: "Mendapat rida Allah Swt. dan kasih sayang keluarga.", correct: 105, screen: 2 } 
-        ];
-
-        // Memetakan jawaban yang benar (Manual mapping agar logis sesuai gambar)
-        //[cite: 8]
         const exactGamePairs = [
-            // Set 1
+            // Set 1 (Layar 1)
             { left: "Membantu ibu mencuci piring.", right: "Rumah menjadi bersih dan nyaman.", id: 1 },
             { left: "Menghormati orang tua.", right: "Mendapat rida Allah Swt. dan pahala.", id: 2 },
             { left: "Berkata jujur kepada keluarga.", right: "Dipercaya oleh keluarga dan dicintai.", id: 3 },
             { left: "Merapikan tempat tidur sendiri.", right: "Terbiasa hidup mandiri dan bertanggung jawab.", id: 4 },
-            // Set 2
+            // Set 2 (Layar 2)
             { left: "Melayani orang tua dengan baik.", right: "Orang tua senang dan doa-doanya mudah dikabulkan.", id: 5 },
             { left: "Mendoakan orang tua setiap hari.", right: "Mendapat rida Allah Swt. dan kasih sayang keluarga.", id: 6 },
             { left: "Menjaga kebersihan rumah.", right: "Membuat hati tenang dan hubungan semakin harmonis.", id: 7 },
@@ -550,31 +553,43 @@
         ];
 
         let currentGameScreen = 1;
-        let drawnLines = {}; // { leftDotId: { rightDotId, lineElement, isCorrect } }
+        let drawnLines = {}; 
         let isDragging = false;
         let activeLine = null;
         let startDot = null;
 
+        // Fungsi Shuffle Array (Mengacak Pilihan Kanan)
+        function shuffleArray(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex != 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
         function initGameScreen(screenNum) {
             currentGameScreen = screenNum;
             document.getElementById('game-progress').innerText = `Layar ${screenNum} dari 2`;
-            document.getElementById('game-svg').innerHTML = ''; // Clear SVG
-            drawnLines = {}; // Reset data garis
+            document.getElementById('game-svg').innerHTML = ''; 
+            drawnLines = {}; 
 
             const leftCol = document.getElementById('game-left-col');
             const rightCol = document.getElementById('game-right-col');
             leftCol.innerHTML = '';
             rightCol.innerHTML = '';
 
-            // Ambil data untuk layar saat ini[cite: 8]
+            // Filter item berdasarkan layar (1-4 atau 5-8)
             let currentItems = exactGamePairs.filter(item => 
                 (screenNum === 1 && item.id <= 4) || (screenNum === 2 && item.id > 4)
             );
 
-            // Acak pilihan di kanan agar menjadi game
-            let rightItems = [...currentItems].sort(() => Math.random() - 0.5);
+            // ACAK array untuk sisi kanan agar garis tidak lurus
+            let rightItems = shuffleArray([...currentItems]);
+            const labelsRight = ['A', 'B', 'C', 'D']; // Mengubah label kanan jadi huruf
 
-            // Render Kiri
+            // Render Kiri (Tetap Urut)
             currentItems.forEach((item, index) => {
                 let num = (screenNum === 1) ? index + 1 : index + 5;
                 leftCol.innerHTML += `
@@ -586,30 +601,27 @@
                 `;
             });
 
-            // Render Kanan
+            // Render Kanan (Diacak)
             rightItems.forEach((item, index) => {
-                let num = (screenNum === 1) ? index + 1 : index + 5;
                 rightCol.innerHTML += `
                     <div class="game-item right-col">
-                        <div class="game-number">${num}</div>
+                        <div class="game-number">${labelsRight[index]}</div>
                         <div class="px-3 flex-grow-1 text-end">${item.right}</div>
                         <div class="game-dot" data-side="right" data-id="${item.id}"></div>
                     </div>
                 `;
             });
 
-            // Ubah text tombol lanjut
             document.getElementById('btn-next-game').innerHTML = (screenNum === 1) ? 
                 `Lanjut <span class="material-icons align-middle ms-2">arrow_forward</span>` : 
                 `Selesai Game <span class="material-icons align-middle ms-2">check_circle</span>`;
         }
 
-        // --- Logika Interaksi Drag Garis ---
         function getBoardPos(evt) {
             let rect = document.getElementById('game-board').getBoundingClientRect();
             let clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
             let clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
-            return { x: clientX - rect.left, y: clientY - rect.top, rawX: clientX, rawY: clientY };
+            return { x: clientX - rect.left, y: clientY - rect.top };
         }
 
         function getDotCenter(dotElement) {
@@ -624,10 +636,8 @@
         function startDraw(e) {
             e.preventDefault();
             if(e.target.dataset.side !== 'left') return;
-            
             let dotId = e.target.dataset.id;
             
-            // Hapus garis lama jika titik kiri yang sama ditarik lagi
             if(drawnLines[dotId]) {
                 drawnLines[dotId].line.remove();
                 delete drawnLines[dotId];
@@ -644,7 +654,7 @@
             activeLine.setAttribute("y2", pos.y);
             activeLine.setAttribute("stroke", "#888");
             activeLine.setAttribute("stroke-width", "6");
-            activeLine.setAttribute("stroke-dasharray", "10,5"); // putus-putus saat ditarik
+            activeLine.setAttribute("stroke-dasharray", "10,5"); 
             document.getElementById('game-svg').appendChild(activeLine);
             
             document.addEventListener('mousemove', drawMove);
@@ -655,7 +665,7 @@
 
         function drawMove(e) {
             if(!isDragging || !activeLine) return;
-            e.preventDefault(); // Cegah scroll saat menarik garis
+            e.preventDefault(); 
             let pos = getBoardPos(e);
             activeLine.setAttribute("x2", pos.x);
             activeLine.setAttribute("y2", pos.y);
@@ -670,13 +680,11 @@
             document.removeEventListener('mouseup', endDraw);
             document.removeEventListener('touchend', endDraw);
 
-            // Dapatkan element tempat jari dilepas
             let clientX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
             let clientY = e.changedTouches ? e.changedTouches[0].clientY : e.clientY;
             let targetEl = document.elementFromPoint(clientX, clientY);
 
             if(targetEl && targetEl.classList.contains('game-dot') && targetEl.dataset.side === 'right') {
-                // Berhasil nyambung ke kanan
                 let endPos = getDotCenter(targetEl);
                 activeLine.setAttribute("x2", endPos.x);
                 activeLine.setAttribute("y2", endPos.y);
@@ -685,19 +693,11 @@
                 let leftId = startDot.dataset.id;
                 let rightId = targetEl.dataset.id;
                 
-                // Cek Benar / Salah[cite: 8]
                 let isCorrect = (leftId === rightId);
-                
-                // Warna garis: Benar = Hijau, Salah = Merah
                 activeLine.setAttribute("stroke", isCorrect ? "#198754" : "#dc3545");
                 
-                drawnLines[leftId] = {
-                    rightId: rightId,
-                    line: activeLine,
-                    isCorrect: isCorrect
-                };
+                drawnLines[leftId] = { rightId: rightId, line: activeLine, isCorrect: isCorrect };
             } else {
-                // Batal jika tidak dilepas di dot kanan
                 activeLine.remove();
             }
             activeLine = null;
@@ -717,10 +717,8 @@
             }
         }
 
-        // Update garis jika window di-resize
         window.addEventListener('resize', () => {
             if(!document.getElementById('page-game').classList.contains('d-none')) {
-                // Mudah nya, gambar ulang dari data yang tersimpan
                 for (let leftId in drawnLines) {
                     let leftDot = document.querySelector(`.game-dot[data-side="left"][data-id="${leftId}"]`);
                     let rightDot = document.querySelector(`.game-dot[data-side="right"][data-id="${drawnLines[leftId].rightId}"]`);
@@ -739,7 +737,7 @@
 
 
         // ==========================================
-        // 2. NAVIGASI HALAMAN
+        // 2. NAVIGASI HALAMAN & VIDEO
         // ==========================================
         const materiCarouselEl = document.getElementById('materiCarousel');
         materiCarouselEl.addEventListener('slid.bs.carousel', function (event) {
@@ -748,7 +746,7 @@
             
             let iframes = document.querySelectorAll('#materiCarousel iframe');
             iframes.forEach(iframe => {
-                iframe.src = iframe.src; 
+                iframe.src = iframe.src; // Matikan video saat slide berganti
             });
         });
 
@@ -762,7 +760,7 @@
             } else if (halaman === 'refleksi') {
                 initRefleksi();
             } else if (halaman === 'game') {
-                initGameScreen(1); // Mulai game layar 1
+                initGameScreen(1);
             }
         }
 
@@ -772,7 +770,7 @@
         }
 
         // ==========================================
-        // 3. FUNGSI KUIS
+        // 3. FUNGSI KUIS DENGAN FEEDBACK BENAR/SALAH
         // ==========================================
         const soalKuis = [
             { tanya: "1. Kelompok terkecil dalam masyarakat yang terdiri atas ayah, ibu, dan anak-anak yang hidup bersama dalam satu rumah disebut...", opsi: ["A. Sekolah", "B. Masyarakat", "C. Keluarga", "D. Negara"], jawabanBenar: 2 },
@@ -795,24 +793,76 @@
             document.getElementById('quiz-result').classList.add('d-none');
             tampilkanSoal();
         }
+
         function tampilkanSoal() {
             let dataSoal = soalKuis[indexSoalSaatIni];
             document.getElementById('quiz-progress').innerText = `Soal ${indexSoalSaatIni + 1} dari ${soalKuis.length}`;
             document.getElementById('quiz-question').innerText = dataSoal.tanya;
+            
             let containerOpsi = document.getElementById('quiz-options-container');
             containerOpsi.innerHTML = ''; 
+            
             dataSoal.opsi.forEach((teksOpsi, indexOpsi) => {
                 let btn = document.createElement('button');
-                btn.className = 'quiz-option'; btn.innerText = teksOpsi;
-                btn.onclick = () => cekJawabanKuis(indexOpsi);
+                btn.className = 'quiz-option active-hover'; 
+                btn.innerText = teksOpsi;
+                btn.onclick = () => cekJawabanKuis(indexOpsi, btn);
                 containerOpsi.appendChild(btn);
             });
+
+            // Sembunyikan pesan feedback dan tombol next
+            document.getElementById('quiz-feedback-container').classList.add('d-none');
+            document.getElementById('btn-next-question').classList.add('d-none');
         }
+
         function cekJawabanKuis(indexPilihan) {
-            if(indexPilihan === soalKuis[indexSoalSaatIni].jawabanBenar) { skorBenar++; }
-            indexSoalSaatIni++;
-            if(indexSoalSaatIni < soalKuis.length) { tampilkanSoal(); } else { tampilkanHasilKuis(); }
+            let dataSoal = soalKuis[indexSoalSaatIni];
+            let isCorrect = (indexPilihan === dataSoal.jawabanBenar);
+            
+            // Kunci semua tombol agar tidak bisa ditekan lagi
+            let opsiBtns = document.querySelectorAll('.quiz-option');
+            opsiBtns.forEach((btn, idx) => {
+                btn.onclick = null;
+                btn.classList.remove('active-hover');
+                btn.style.cursor = 'default';
+                
+                // Warnai tombol berdasarkan benar/salah
+                if(idx === dataSoal.jawabanBenar) {
+                    btn.classList.add('bg-success', 'text-white', 'border-success'); // Jawaban benar diwarnai Hijau
+                } else if(idx === indexPilihan && !isCorrect) {
+                    btn.classList.add('bg-danger', 'text-white', 'border-danger'); // Jawaban salah yang dipilih diwarnai Merah
+                }
+            });
+
+            // Tampilkan Pesan Feedback
+            let feedbackContainer = document.getElementById('quiz-feedback-container');
+            feedbackContainer.classList.remove('d-none');
+            if(isCorrect) {
+                skorBenar++;
+                feedbackContainer.innerHTML = `<div class="alert alert-success fs-3 fw-bold"><span class="material-icons align-middle me-2">check_circle</span> Jawaban Anda Tepat!</div>`;
+            } else {
+                feedbackContainer.innerHTML = `<div class="alert alert-danger fs-3 fw-bold"><span class="material-icons align-middle me-2">cancel</span> Jawaban Anda Kurang Tepat.</div>`;
+            }
+
+            // Tampilkan tombol Soal Selanjutnya
+            let nextBtn = document.getElementById('btn-next-question');
+            nextBtn.classList.remove('d-none');
+            if(indexSoalSaatIni === soalKuis.length - 1) {
+                nextBtn.innerHTML = `Lihat Nilai Akhir <span class="material-icons align-middle ms-2">analytics</span>`;
+            } else {
+                nextBtn.innerHTML = `Soal Selanjutnya <span class="material-icons align-middle ms-2">arrow_forward</span>`;
+            }
         }
+
+        function soalSelanjutnya() {
+            indexSoalSaatIni++;
+            if(indexSoalSaatIni < soalKuis.length) { 
+                tampilkanSoal(); 
+            } else { 
+                tampilkanHasilKuis(); 
+            }
+        }
+
         function tampilkanHasilKuis() {
             document.getElementById('quiz-container').classList.add('d-none');
             document.getElementById('quiz-result').classList.remove('d-none');
