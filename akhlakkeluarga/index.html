@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Pembelajaran PAI - Kelas 4</title>
+    
+    <!-- Google Fonts: Plus Jakarta Sans & Roboto -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* Typography & Theme */
+        :root {
+            --primary-blue: #0d6efd;
+            --light-blue: #e7f1ff;
+            --bg-color: #f4f8ff;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-color);
+            padding-top: 100px;
+            padding-bottom: 40px;
+            user-select: none;
+            overflow-x: hidden;
+        }
+        h1, h2, h3, h4, h5, h6, .nav-text, .title-text {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 700;
+        }
+
+        /* Top Header */
+        .app-header {
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .header-title-container {
+            line-height: 1.2;
+        }
+
+        /* UI Optimization for IFP */
+        button, .nav-item, .form-check-label, .emoticon-btn, .quiz-option, .game-dot {
+            touch-action: none; /* Penting untuk interaksi drag-and-drop game */
+            cursor: pointer;
+        }
+        .card {
+            border-radius: 15px;
+            border: none;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        /* Carousel/Slide styling */
+        .carousel-item {
+            height: 65vh;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            overflow-y: auto;
+        }
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-thumb { background-color: #a0c4ff; border-radius: 10px; }
+
+        .carousel-indicators { bottom: -50px; }
+        .carousel-indicators [data-bs-target] {
+            background-color: var(--primary-blue);
+            height: 12px;
+            width: 12px;
+            border-radius: 50%;
+            margin: 0 8px;
+        }
+        
+        /* Carousel Controls */
+        .carousel-control-prev, .carousel-control-next { width: 10%; opacity: 0.9; }
+        .carousel-control-icon-custom {
+            background-color: var(--primary-blue);
+            color: white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+        .carousel-control-icon-custom:active { transform: scale(0.9); }
+
+        /* Latihan Soal Buttons */
+        .quiz-option {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 20px;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            border-radius: 12px;
+            background-color: #f8f9fa;
+            border: 2px solid #dee2e6;
+            transition: all 0.2s ease;
+        }
+        .quiz-option:active, .quiz-option.selected {
+            background-color: var(--light-blue);
+            border-color: var(--primary-blue);
+            color: var(--primary-blue);
+        }
+        
+        /* Emoticons */
+        .emoticon-container { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
+        .emoticon-btn {
+            font-size: 6rem;
+            background: none;
+            border: none;
+            transition: transform 0.2s, filter 0.2s;
+            filter: grayscale(100%);
+        }
+        .emoticon-btn:active {
+            transform: scale(1.1);
+            filter: grayscale(0%);
+            drop-shadow: 0px 10px 20px rgba(13,110,253,0.4);
+        }
+
+        .img-materi { max-height: 40vh; object-fit: contain; border-radius: 12px; }
+
+        /* ================= GAME TARIK BENANG CSS ================= */
+        #game-board {
+            position: relative;
+            width: 100%;
+            height: 60vh;
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+        }
+        #game-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* SVG tidak memblokir sentuhan */
+            z-index: 10;
+        }
+        .game-item {
+            background-color: #fff4f4;
+            border: 2px solid #ffcccc;
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            position: relative;
+        }
+        .game-item.right-col {
+            background-color: #f4fff4;
+            border-color: #ccffcc;
+            flex-direction: row-reverse;
+        }
+        .game-dot {
+            width: 30px;
+            height: 30px;
+            background-color: #555;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 20;
+            touch-action: none; 
+        }
+        .game-item.left-col .game-dot { right: -15px; }
+        .game-item.right-col .game-dot { left: -15px; }
+        
+        .game-number {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: #d63384;
+            background: white;
+            border-radius: 50%;
+            width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center;
+            border: 2px solid #d63384;
+        }
+        .game-item.right-col .game-number { color: #198754; border-color: #198754; }
+    </style>
+</head>
+<body>
+
+    <!-- Header (Fixed Top) -->
+    <nav class="navbar navbar-dark bg-primary fixed-top app-header py-3">
+        <div class="container-fluid px-4">
+            <div class="navbar-brand text-white header-title-container">
+                <div class="fs-2 title-text">Akhlak Terhadap Keluarga</div>
+                <div class="fs-5 fw-normal font-roboto mt-1 text-light">Kelas 4 | BAB 3</div>
+            </div>
+            
+            <div class="d-flex align-items-center gap-3">
+                <button class="btn btn-light rounded-circle p-2 d-flex align-items-center justify-content-center shadow-sm" onclick="toggleFullScreen()" title="Fullscreen" style="width: 60px; height: 60px;">
+                    <span class="material-icons fs-1 text-primary" id="fs-icon">fullscreen</span>
+                </button>
+                
+                <button class="btn btn-light rounded-circle p-2 d-flex align-items-center justify-content-center shadow-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#mainMenuOffcanvas" style="width: 60px; height: 60px;">
+                    <span class="material-icons fs-1 text-primary">menu</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Offcanvas Hamburger Menu -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="mainMenuOffcanvas" style="width: 400px;">
+        <div class="offcanvas-header bg-primary text-white py-4">
+            <h3 class="offcanvas-title title-text">Menu Pembelajaran</h3>
+            <button type="button" class="btn-close btn-close-white fs-4" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body p-4 d-flex flex-column gap-4">
+            <button class="btn btn-outline-primary btn-lg d-flex align-items-center gap-3 py-4 fs-3 rounded-4" onclick="gantiHalaman('beranda')" data-bs-dismiss="offcanvas">
+                <span class="material-icons" style="font-size: 2.5rem;">home</span> Beranda
+            </button>
+            <button class="btn btn-outline-primary btn-lg d-flex align-items-center gap-3 py-4 fs-3 rounded-4" onclick="gantiHalaman('materi')" data-bs-dismiss="offcanvas">
+                <span class="material-icons" style="font-size: 2.5rem;">auto_stories</span> Materi
+            </button>
+            <button class="btn btn-outline-primary btn-lg d-flex align-items-center gap-3 py-4 fs-3 rounded-4" onclick="gantiHalaman('game')" data-bs-dismiss="offcanvas">
+                <span class="material-icons" style="font-size: 2.5rem;">cable</span> Tarik Benang
+            </button>
+            <button class="btn btn-outline-primary btn-lg d-flex align-items-center gap-3 py-4 fs-3 rounded-4" onclick="gantiHalaman('latihan')" data-bs-dismiss="offcanvas">
+                <span class="material-icons" style="font-size: 2.5rem;">quiz</span> Latihan Soal
+            </button>
+            <button class="btn btn-outline-primary btn-lg d-flex align-items-center gap-3 py-4 fs-3 rounded-4" onclick="gantiHalaman('refleksi')" data-bs-dismiss="offcanvas">
+                <span class="material-icons" style="font-size: 2.5rem;">mood</span> Refleksi
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="container-fluid px-4">
+
+        <!-- HALAMAN BERANDA -->
+        <section id="page-beranda" class="page-section">
+            <div class="card p-5 mx-auto text-center shadow-lg" style="max-width: 1000px; min-height: 75vh; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 4px solid var(--light-blue);">
+                <img src="image_99d8bc.png" alt="Cover Materi" class="img-fluid mb-4 rounded-4 shadow-sm" style="max-height: 40vh;">
+                <h1 class="text-primary title-text display-3 mb-3">Selamat Datang!</h1>
+                <p class="fs-2 text-secondary mb-5">Mari kita mulai pembelajaran hari ini dengan penuh semangat.</p>
+                <button class="btn btn-primary btn-lg py-3 px-5 rounded-pill fs-2 shadow-sm d-flex align-items-center gap-3 mx-auto" onclick="bukaMenuHamburger()">
+                    <span class="material-icons fs-1">touch_app</span> Buka Menu
+                </button>
+            </div>
+        </section>
+
+        <!-- HALAMAN MATERI -->
+        <section id="page-materi" class="page-section d-none">
+            <div class="mx-auto" style="max-width: 1200px;">
+                <div class="d-flex justify-content-between align-items-center mb-3 px-3">
+                    <h2 class="text-primary title-text m-0 fs-2">Materi Pembelajaran</h2>
+                    <span id="materi-progress" class="badge bg-primary fs-5 py-2 px-3 rounded-pill shadow-sm">Halaman 1 dari 8</span>
+                </div>
+
+                <div id="materiCarousel" class="carousel slide" data-bs-touch="true" data-bs-interval="false">
+                    <div class="carousel-inner shadow card position-relative">
+                        
+                        <!-- Slide 1: Video Pembelajaran 1 -->
+                        <div class="carousel-item active">
+                            <div class="d-flex flex-column justify-content-center h-100">
+                                <h3 class="text-primary title-text mb-4 fs-2 text-center">Video Pembelajaran Awal</h3>
+                                <div class="ratio ratio-16x9 mx-auto shadow-sm" style="max-width: 800px; border-radius: 12px; overflow: hidden;">
+                                    <iframe src="https://www.youtube.com/embed/0DnhdLXdLkc" title="Video Materi Pembelajaran" allowfullscreen></iframe>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Slide 2: Pengertian Keluarga -->
+                        <div class="carousel-item text-center">
+                            <div class="d-flex flex-column justify-content-center h-100">
+                                <img src="image_99d8de.png" alt="Pengertian Keluarga" class="img-fluid img-materi shadow-sm mb-4 mx-auto">
+                                <h3 class="text-primary title-text mb-3 fs-2">1. Pengertian Keluarga</h3>
+                                <p class="fs-3 px-5" style="line-height: 1.8;">
+                                    Keluarga adalah kelompok terkecil dalam masyarakat yang terdiri atas ayah, ibu, dan anak-anak yang hidup bersama dalam satu rumah karena adanya ikatan darah, perkawinan, atau adopsi[cite: 2].
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Slide 3: Anggota Keluarga -->
+                        <div class="carousel-item text-center">
+                            <div class="d-flex flex-column justify-content-center h-100">
+                                <img src="image_99d915.png" alt="Anggota Keluarga" class="img-fluid img-materi shadow-sm mb-4 mx-auto">
+                                <h3 class="text-primary title-text mb-3 fs-2">2. Anggota Keluarga</h3>
+                                <div class="d-flex justify-content-center">
+                                    <ul class="fs-3 text-start d-inline-block" style="line-height: 2;">
+                                        <li>Ayah dan Ibu[cite: 3]</li>
+                                        <li>Kakak dan Adik[cite: 3]</li>
+                                        <li>Kakek dan Nenek[cite: 3]</li>
+                                        <li>Paman, Bibi, dan Sepupu[cite: 3]</li>
+                                        <li>Anggota keluarga lainnya[cite: 3]</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Slide 4: Contoh Akhlak -->
+                        <div class="carousel-item text-center">
+                            <div class="d-flex flex-column justify-content-center h-100">
+                                <img src="image_99dbc1.png" alt="Contoh Akhlak Terhadap Keluarga" class="img-fluid img-materi shadow-sm mb-4 mx-auto">
+                                <h3 class="text-primary title-text mb-3 fs-2">3. Contoh Akhlak Terhadap Keluarga</h3>
+                                <div class="d-flex justify-content-center">
+                                    <ul class="fs-3 text-start d-inline-block" style="line-height: 1.8;">
+                                        <li>Berbakti dan taat kepada orang tua[cite: 4]</li>
+                                        <li>Menghormati dan menyayangi semua anggota keluarga[cite: 4]</li>
+                                        <li>Membantu pekerjaan rumah[cite: 4]</li>
+                                        <li>Berbicara dengan sopan[cite: 4]</li>
+                                        <li>Mendoakan kebaikan untuk keluarga[cite: 4]</li>
+                                        <li>Menjaga nama baik keluarga[cite: 4]</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Slide 5: Manfaat Akhlak -->
+                        <div class="carousel-item text-center">
+                            <div class="d-flex flex-column justify-content-center h-100">
+                                <img src="image_99dbe4.png" alt="Manfaat Akhlak Terhadap Keluarga" class="img-fluid img-materi shadow-sm mb-4 mx-auto">
+                                <h3 class="text-primary title-text mb-3 fs-2">4. Manfaat Akhlak Terhadap Keluarga</h3>
+                                <div class="d-flex justify-content-center">
+                                    <ul class="fs-3 text-start d-inline-block" style="line-height: 1.8;">
+                                        <li>Keluarga menjadi harmonis dan bahagia[cite: 5]</li>
+                                        <li>Tumbuh rasa cinta dan kasih sayang[cite: 5]</li>
+                                        <li>Mendapat ridha Allah Swt.[cite: 5]</li>
+                                        <li>Hidup lebih tenang dan tenteram[cite: 5]</li>
+                                        <li>Menjadi pribadi yang baik di mata keluarga dan orang lain[cite: 5]</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Slide 6: Akibat Tidak Berakhlak -->
+                        <div class="carousel-item text-center">
+                            <div class="d-flex flex-column justify-content-center h-100">
+                                <img src="image_99dc1d.png" alt="Akibat Tidak Berakhlak Terhadap Keluarga" class="img-fluid img-materi shadow-sm mb-4 mx-auto">
+                                <h3 class="text-primary title-text mb-3 fs-2">5. Akibat Tidak Berakhlak Terhadap Keluarga</h3>
+                                <div class="d-flex justify-content-center">
+                                    <ul class="fs-3 text-start d-inline-block text-danger" style="line-height: 1.8;">
+                                        <li>Keluarga mudah bertengkar dan tidak harmonis[cite: 6]</li>
+                                        <li>Hubungan menjadi renggang dan tidak akur[cite: 6]</li>
+                                        <li>Tidak mendapatkan ridha Allah Swt.[cite: 6]</li>
+                                        <li>Hati menjadi gelisah dan hidup tidak tenang[cite: 6]</li>
+                                        <li>Menyesal di kemudian hari[cite: 6]</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Slide 7: Perilaku Sehari-hari -->
+                        <div class="carousel-item text-center">
+                            <div class="d-flex flex-column justify-content-center h-100">
+                                <img src="image_99dc58.png" alt="Perilaku Sehari-hari" class="img-fluid img-materi shadow-sm mb-4 mx-auto">
+                                <h3 class="text-primary title-text mb-3 fs-2">6. Perilaku dalam Kehidupan Sehari-hari</h3>
+                                <div class="d-flex justify-content-center">
+                                    <ul class="fs-3 text-start d-inline-block" style="line-height: 1.8;">
+                                        <li>Bangun pagi dan memberi salam kepada orang tua[cite: 7]</li>
+                                        <li>Membantu merapikan tempat tidur dan kebersihan rumah[cite: 7]</li>
+                                        <li>Membantu menyiapkan makanan atau minuman[cite: 7]</li>
+                                        <li>Belajar rajin agar membanggakan keluarga[cite: 7]</li>
+                                        <li>Mendengarkan nasihat orang tua dengan baik[cite: 7]</li>
+                                        <li>Meluangkan waktu berkualitas bersama keluarga[cite: 7]</li>
+                                        <li>Selalu berbicara sopan dan tidak membantah[cite: 7]</li>
+                                        <li>Mengucapkan terima kasih atas kebaikan keluarga[cite: 7]</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Slide 8: Video Penutup -->
+                        <div class="carousel-item">
+                            <div class="d-flex flex-column justify-content-center h-100">
+                                <h3 class="text-primary title-text mb-4 fs-2 text-center">Video Penutup Pembelajaran</h3>
+                                <div class="ratio ratio-16x9 mx-auto shadow-sm" style="max-width: 800px; border-radius: 12px; overflow: hidden;">
+                                    <iframe src="https://www.youtube.com/embed/90bIgXe1NAM" title="Video Penutup Pembelajaran" allowfullscreen></iframe>
+                                </div>
+                                <p class="fs-3 text-center mt-4 text-secondary">Mari kita tonton video di atas sebagai kesimpulan dari materi hari ini.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="carousel-indicators mb-0">
+                        <button type="button" data-bs-target="#materiCarousel" data-bs-slide-to="0" class="active"></button>
+                        <button type="button" data-bs-target="#materiCarousel" data-bs-slide-to="1"></button>
+                        <button type="button" data-bs-target="#materiCarousel" data-bs-slide-to="2"></button>
+                        <button type="button" data-bs-target="#materiCarousel" data-bs-slide-to="3"></button>
+                        <button type="button" data-bs-target="#materiCarousel" data-bs-slide-to="4"></button>
+                        <button type="button" data-bs-target="#materiCarousel" data-bs-slide-to="5"></button>
+                        <button type="button" data-bs-target="#materiCarousel" data-bs-slide-to="6"></button>
+                        <button type="button" data-bs-target="#materiCarousel" data-bs-slide-to="7"></button>
+                    </div>
+
+                    <button class="carousel-control-prev" type="button" data-bs-target="#materiCarousel" data-bs-slide="prev">
+                        <div class="carousel-control-icon-custom"><span class="material-icons fs-1">chevron_left</span></div>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#materiCarousel" data-bs-slide="next">
+                        <div class="carousel-control-icon-custom"><span class="material-icons fs-1">chevron_right</span></div>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- HALAMAN GAME TARIK BENANG -->
+        <section id="page-game" class="page-section d-none">
+            <div class="card p-4 mx-auto shadow" style="max-width: 1200px; min-height: 70vh;">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="text-primary title-text m-0 fs-1">Game Tarik Benang</h2>
+                    <span id="game-progress" class="badge bg-primary fs-4 py-2 px-3 rounded-pill">Layar 1 dari 2</span>
+                </div>
+                <p class="fs-4 text-secondary text-center mb-4">Tarik garis dari sisi kiri (Perilaku) ke sisi kanan (Manfaat) yang sesuai.</p>
+                
+                <div id="game-board" class="shadow-sm border">
+                    <svg id="game-svg"></svg>
+                    <div class="row h-100">
+                        <div class="col-5 d-flex flex-column justify-content-around h-100" id="game-left-col">
+                            <!-- JS Generated -->
+                        </div>
+                        <div class="col-2"></div>
+                        <div class="col-5 d-flex flex-column justify-content-around h-100" id="game-right-col">
+                            <!-- JS Generated -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-center gap-3 mt-4">
+                    <button class="btn btn-outline-danger btn-lg py-3 px-5 rounded-pill fs-3 shadow-sm" onclick="resetGameScreen()">
+                        <span class="material-icons align-middle me-2">refresh</span> Ulangi Garis
+                    </button>
+                    <button class="btn btn-primary btn-lg py-3 px-5 rounded-pill fs-3 shadow-sm" id="btn-next-game" onclick="nextGameScreen()">
+                        Lanjut <span class="material-icons align-middle ms-2">arrow_forward</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- HALAMAN LATIHAN SOAL -->
+        <section id="page-latihan" class="page-section d-none">
+            <div class="card p-5 mx-auto shadow" style="max-width: 1000px; min-height: 70vh; display: flex; flex-direction: column; justify-content: center;">
+                <div id="quiz-container">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="text-primary title-text m-0 fs-1">Latihan Soal</h2>
+                        <span id="quiz-progress" class="badge bg-primary fs-4 py-2 px-3 rounded-pill">Soal 1 dari 10</span>
+                    </div>
+                    <div class="mb-5 mt-4">
+                        <p id="quiz-question" class="fs-2 fw-bold mb-5 lh-base">Pertanyaan muncul di sini...</p>
+                        <div id="quiz-options-container"></div>
+                    </div>
+                </div>
+
+                <div id="quiz-result" class="d-none text-center py-5">
+                    <span class="material-icons text-success mb-3" style="font-size: 100px;">military_tech</span>
+                    <h2 class="text-primary title-text display-4 mb-3">Latihan Selesai!</h2>
+                    <p class="fs-2 mb-4">Nilai Akhir Anda:</p>
+                    <div class="display-1 fw-bold text-primary mb-5" id="final-score">100</div>
+                    <div class="d-flex justify-content-center gap-4">
+                        <button class="btn btn-outline-primary btn-lg py-3 px-5 rounded-pill fs-3 shadow-sm" onclick="mulaiKuis()">Ulangi Latihan</button>
+                        <button class="btn btn-primary btn-lg py-3 px-5 rounded-pill fs-3 shadow-sm" onclick="gantiHalaman('refleksi')">Lanjut Refleksi</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- HALAMAN REFLEKSI -->
+        <section id="page-refleksi" class="page-section d-none">
+            <div class="card p-5 mx-auto text-center shadow" style="max-width: 1000px; min-height: 70vh; display: flex; flex-direction: column; justify-content: center;">
+                <!-- Step 1 -->
+                <div id="refleksi-step-1">
+                    <h2 class="text-primary title-text mb-5 fs-1">Refleksi Pembelajaran</h2>
+                    <div class="mb-5">
+                        <label class="fs-2 mb-4 d-block text-secondary">Masukkan jumlah murid yang akan melakukan refleksi:</label>
+                        <input type="number" id="jumlah-murid" class="form-control form-control-lg fs-1 text-center mx-auto" style="max-width: 200px; height: 80px;" min="1" value="1">
+                    </div>
+                    <button class="btn btn-primary btn-lg py-3 px-5 rounded-pill fs-2 shadow-sm" onclick="mulaiRefleksi()">Mulai Refleksi</button>
+                </div>
+                <!-- Step 2 -->
+                <div id="refleksi-step-2" class="d-none">
+                    <h2 class="text-primary title-text mb-4 fs-1">Giliran Murid ke-<span id="murid-ke">1</span></h2>
+                    <p class="fs-2 text-secondary">Bagaimana perasaanmu setelah belajar materi ini?</p>
+                    <div class="emoticon-container my-5">
+                        <button class="emoticon-btn" onclick="catatRefleksi('senang')">😊<br><span class="fs-4 d-block mt-3 title-text">Senang</span></button>
+                        <button class="emoticon-btn" onclick="catatRefleksi('sangat_paham')">🤩<br><span class="fs-4 d-block mt-3 title-text">Sangat Paham</span></button>
+                        <button class="emoticon-btn" onclick="catatRefleksi('bingung')">🤔<br><span class="fs-4 d-block mt-3 title-text">Bingung</span></button>
+                        <button class="emoticon-btn" onclick="catatRefleksi('bosan')">😴<br><span class="fs-4 d-block mt-3 title-text">Bosan</span></button>
+                    </div>
+                </div>
+                <!-- Step 3 -->
+                <div id="refleksi-step-3" class="d-none">
+                    <h2 class="text-primary title-text mb-5 display-4">Hasil Refleksi Kelas</h2>
+                    <div class="row fs-2 text-start justify-content-center mb-5 mx-auto" style="max-width: 600px;">
+                        <div class="col-6 mb-4">😊 Senang:</div>
+                        <div class="col-6 mb-4 fw-bold text-end text-primary" id="hasil-senang">0 Murid</div>
+                        
+                        <div class="col-6 mb-4">🤩 Sangat Paham:</div>
+                        <div class="col-6 mb-4 fw-bold text-end text-primary" id="hasil-paham">0 Murid</div>
+                        
+                        <div class="col-6 mb-4">🤔 Bingung:</div>
+                        <div class="col-6 mb-4 fw-bold text-end text-primary" id="hasil-bingung">0 Murid</div>
+                        
+                        <div class="col-6 mb-4">😴 Bosan:</div>
+                        <div class="col-6 mb-4 fw-bold text-end text-primary" id="hasil-bosan">0 Murid</div>
+                    </div>
+                    <button class="btn btn-danger btn-lg py-3 px-5 rounded-pill fs-3 shadow-sm" onclick="hapusDataRefleksi()">
+                        <span class="material-icons align-middle me-2">delete</span>Hapus Data & Ulangi
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // ==========================================
+        // 1. DATA GAME TARIK BENANG (Berdasarkan Screenshot)[cite: 8]
+        // ==========================================
+        const gameData = [
+            // Layar 1 (4 Pasang)
+            { lId: 1, textL: "Membantu ibu mencuci piring.", rId: 101, textR: "Rumah menjadi bersih dan nyaman.", correct: 101, screen: 1 }, //[cite: 8]
+            { lId: 2, textL: "Menghormati orang tua.", rId: 102, textR: "Mendapat rida Allah Swt. dan pahala.", correct: 102, screen: 1 }, //[cite: 8]
+            { lId: 3, textL: "Berkata jujur kepada keluarga.", rId: 103, textR: "Orang tua senang dan doa-doanya mudah dikabulkan.", correct: 104, screen: 1 }, // Note: Mapped strictly to logic below
+            { lId: 4, textL: "Merapikan tempat tidur sendiri.", rId: 104, textR: "Dipercaya oleh keluarga dan dicintai.", correct: 105, screen: 1 }, // Adjusted below for perfect game pairing
+            
+            // Layar 2 (4 Pasang)
+            { lId: 5, textL: "Melayani orang tua dengan baik.", rId: 105, textR: "Keluarga hidup rukun dan bahagia.", correct: 103, screen: 2 },
+            { lId: 6, textL: "Mendoakan orang tua setiap hari.", rId: 106, textR: "Terbiasa hidup mandiri dan bertanggung jawab.", correct: 102, screen: 2 }, 
+            { lId: 7, textL: "Menjaga kebersihan rumah.", rId: 107, textR: "Membuat hati tenang dan hubungan semakin harmonis.", correct: 101, screen: 2 }, 
+            { lId: 8, textL: "Menyayangi saudara dengan tulus.", rId: 108, textR: "Mendapat rida Allah Swt. dan kasih sayang keluarga.", correct: 105, screen: 2 } 
+        ];
+
+        // Memetakan jawaban yang benar (Manual mapping agar logis sesuai gambar)
+        //[cite: 8]
+        const exactGamePairs = [
+            // Set 1
+            { left: "Membantu ibu mencuci piring.", right: "Rumah menjadi bersih dan nyaman.", id: 1 },
+            { left: "Menghormati orang tua.", right: "Mendapat rida Allah Swt. dan pahala.", id: 2 },
+            { left: "Berkata jujur kepada keluarga.", right: "Dipercaya oleh keluarga dan dicintai.", id: 3 },
+            { left: "Merapikan tempat tidur sendiri.", right: "Terbiasa hidup mandiri dan bertanggung jawab.", id: 4 },
+            // Set 2
+            { left: "Melayani orang tua dengan baik.", right: "Orang tua senang dan doa-doanya mudah dikabulkan.", id: 5 },
+            { left: "Mendoakan orang tua setiap hari.", right: "Mendapat rida Allah Swt. dan kasih sayang keluarga.", id: 6 },
+            { left: "Menjaga kebersihan rumah.", right: "Membuat hati tenang dan hubungan semakin harmonis.", id: 7 },
+            { left: "Menyayangi saudara dengan tulus.", right: "Keluarga hidup rukun dan bahagia.", id: 8 }
+        ];
+
+        let currentGameScreen = 1;
+        let drawnLines = {}; // { leftDotId: { rightDotId, lineElement, isCorrect } }
+        let isDragging = false;
+        let activeLine = null;
+        let startDot = null;
+
+        function initGameScreen(screenNum) {
+            currentGameScreen = screenNum;
+            document.getElementById('game-progress').innerText = `Layar ${screenNum} dari 2`;
+            document.getElementById('game-svg').innerHTML = ''; // Clear SVG
+            drawnLines = {}; // Reset data garis
+
+            const leftCol = document.getElementById('game-left-col');
+            const rightCol = document.getElementById('game-right-col');
+            leftCol.innerHTML = '';
+            rightCol.innerHTML = '';
+
+            // Ambil data untuk layar saat ini[cite: 8]
+            let currentItems = exactGamePairs.filter(item => 
+                (screenNum === 1 && item.id <= 4) || (screenNum === 2 && item.id > 4)
+            );
+
+            // Acak pilihan di kanan agar menjadi game
+            let rightItems = [...currentItems].sort(() => Math.random() - 0.5);
+
+            // Render Kiri
+            currentItems.forEach((item, index) => {
+                let num = (screenNum === 1) ? index + 1 : index + 5;
+                leftCol.innerHTML += `
+                    <div class="game-item left-col">
+                        <div class="game-number">${num}</div>
+                        <div class="px-3 flex-grow-1">${item.left}</div>
+                        <div class="game-dot" data-side="left" data-id="${item.id}" onmousedown="startDraw(event)" ontouchstart="startDraw(event)"></div>
+                    </div>
+                `;
+            });
+
+            // Render Kanan
+            rightItems.forEach((item, index) => {
+                let num = (screenNum === 1) ? index + 1 : index + 5;
+                rightCol.innerHTML += `
+                    <div class="game-item right-col">
+                        <div class="game-number">${num}</div>
+                        <div class="px-3 flex-grow-1 text-end">${item.right}</div>
+                        <div class="game-dot" data-side="right" data-id="${item.id}"></div>
+                    </div>
+                `;
+            });
+
+            // Ubah text tombol lanjut
+            document.getElementById('btn-next-game').innerHTML = (screenNum === 1) ? 
+                `Lanjut <span class="material-icons align-middle ms-2">arrow_forward</span>` : 
+                `Selesai Game <span class="material-icons align-middle ms-2">check_circle</span>`;
+        }
+
+        // --- Logika Interaksi Drag Garis ---
+        function getBoardPos(evt) {
+            let rect = document.getElementById('game-board').getBoundingClientRect();
+            let clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
+            let clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
+            return { x: clientX - rect.left, y: clientY - rect.top, rawX: clientX, rawY: clientY };
+        }
+
+        function getDotCenter(dotElement) {
+            let rect = dotElement.getBoundingClientRect();
+            let boardRect = document.getElementById('game-board').getBoundingClientRect();
+            return {
+                x: (rect.left + rect.width/2) - boardRect.left,
+                y: (rect.top + rect.height/2) - boardRect.top
+            };
+        }
+
+        function startDraw(e) {
+            e.preventDefault();
+            if(e.target.dataset.side !== 'left') return;
+            
+            let dotId = e.target.dataset.id;
+            
+            // Hapus garis lama jika titik kiri yang sama ditarik lagi
+            if(drawnLines[dotId]) {
+                drawnLines[dotId].line.remove();
+                delete drawnLines[dotId];
+            }
+
+            isDragging = true;
+            startDot = e.target;
+            let pos = getDotCenter(startDot);
+
+            activeLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            activeLine.setAttribute("x1", pos.x);
+            activeLine.setAttribute("y1", pos.y);
+            activeLine.setAttribute("x2", pos.x);
+            activeLine.setAttribute("y2", pos.y);
+            activeLine.setAttribute("stroke", "#888");
+            activeLine.setAttribute("stroke-width", "6");
+            activeLine.setAttribute("stroke-dasharray", "10,5"); // putus-putus saat ditarik
+            document.getElementById('game-svg').appendChild(activeLine);
+            
+            document.addEventListener('mousemove', drawMove);
+            document.addEventListener('touchmove', drawMove, {passive: false});
+            document.addEventListener('mouseup', endDraw);
+            document.addEventListener('touchend', endDraw);
+        }
+
+        function drawMove(e) {
+            if(!isDragging || !activeLine) return;
+            e.preventDefault(); // Cegah scroll saat menarik garis
+            let pos = getBoardPos(e);
+            activeLine.setAttribute("x2", pos.x);
+            activeLine.setAttribute("y2", pos.y);
+        }
+
+        function endDraw(e) {
+            if(!isDragging) return;
+            isDragging = false;
+            
+            document.removeEventListener('mousemove', drawMove);
+            document.removeEventListener('touchmove', drawMove);
+            document.removeEventListener('mouseup', endDraw);
+            document.removeEventListener('touchend', endDraw);
+
+            // Dapatkan element tempat jari dilepas
+            let clientX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+            let clientY = e.changedTouches ? e.changedTouches[0].clientY : e.clientY;
+            let targetEl = document.elementFromPoint(clientX, clientY);
+
+            if(targetEl && targetEl.classList.contains('game-dot') && targetEl.dataset.side === 'right') {
+                // Berhasil nyambung ke kanan
+                let endPos = getDotCenter(targetEl);
+                activeLine.setAttribute("x2", endPos.x);
+                activeLine.setAttribute("y2", endPos.y);
+                activeLine.removeAttribute("stroke-dasharray");
+
+                let leftId = startDot.dataset.id;
+                let rightId = targetEl.dataset.id;
+                
+                // Cek Benar / Salah[cite: 8]
+                let isCorrect = (leftId === rightId);
+                
+                // Warna garis: Benar = Hijau, Salah = Merah
+                activeLine.setAttribute("stroke", isCorrect ? "#198754" : "#dc3545");
+                
+                drawnLines[leftId] = {
+                    rightId: rightId,
+                    line: activeLine,
+                    isCorrect: isCorrect
+                };
+            } else {
+                // Batal jika tidak dilepas di dot kanan
+                activeLine.remove();
+            }
+            activeLine = null;
+            startDot = null;
+        }
+
+        function resetGameScreen() {
+            document.getElementById('game-svg').innerHTML = '';
+            drawnLines = {};
+        }
+
+        function nextGameScreen() {
+            if(currentGameScreen === 1) {
+                initGameScreen(2);
+            } else {
+                gantiHalaman('latihan');
+            }
+        }
+
+        // Update garis jika window di-resize
+        window.addEventListener('resize', () => {
+            if(!document.getElementById('page-game').classList.contains('d-none')) {
+                // Mudah nya, gambar ulang dari data yang tersimpan
+                for (let leftId in drawnLines) {
+                    let leftDot = document.querySelector(`.game-dot[data-side="left"][data-id="${leftId}"]`);
+                    let rightDot = document.querySelector(`.game-dot[data-side="right"][data-id="${drawnLines[leftId].rightId}"]`);
+                    if(leftDot && rightDot) {
+                        let p1 = getDotCenter(leftDot);
+                        let p2 = getDotCenter(rightDot);
+                        let line = drawnLines[leftId].line;
+                        line.setAttribute("x1", p1.x);
+                        line.setAttribute("y1", p1.y);
+                        line.setAttribute("x2", p2.x);
+                        line.setAttribute("y2", p2.y);
+                    }
+                }
+            }
+        });
+
+
+        // ==========================================
+        // 2. NAVIGASI HALAMAN
+        // ==========================================
+        const materiCarouselEl = document.getElementById('materiCarousel');
+        materiCarouselEl.addEventListener('slid.bs.carousel', function (event) {
+            let totalSlide = document.querySelectorAll('#materiCarousel .carousel-item').length;
+            document.getElementById('materi-progress').innerText = `Halaman ${event.to + 1} dari ${totalSlide}`;
+            
+            let iframes = document.querySelectorAll('#materiCarousel iframe');
+            iframes.forEach(iframe => {
+                iframe.src = iframe.src; 
+            });
+        });
+
+        function gantiHalaman(halaman) {
+            document.querySelectorAll('.page-section').forEach(el => { el.classList.add('d-none'); });
+            document.getElementById('page-' + halaman).classList.remove('d-none');
+            window.scrollTo(0, 0);
+
+            if(halaman === 'latihan') {
+                mulaiKuis();
+            } else if (halaman === 'refleksi') {
+                initRefleksi();
+            } else if (halaman === 'game') {
+                initGameScreen(1); // Mulai game layar 1
+            }
+        }
+
+        function bukaMenuHamburger() {
+            var myOffcanvas = new bootstrap.Offcanvas(document.getElementById('mainMenuOffcanvas'));
+            myOffcanvas.show();
+        }
+
+        // ==========================================
+        // 3. FUNGSI KUIS
+        // ==========================================
+        const soalKuis = [
+            { tanya: "1. Kelompok terkecil dalam masyarakat yang terdiri atas ayah, ibu, dan anak-anak yang hidup bersama dalam satu rumah disebut...", opsi: ["A. Sekolah", "B. Masyarakat", "C. Keluarga", "D. Negara"], jawabanBenar: 2 },
+            { tanya: "2. Berikut ini yang termasuk anggota keluarga adalah...", opsi: ["A. Ayah, Ibu, Kakak, dan Adik", "B. Tetangga sebelah rumah", "C. Teman satu kelas", "D. Guru di sekolah"], jawabanBenar: 0 },
+            { tanya: "3. Salah satu contoh akhlak yang baik terhadap keluarga adalah...", opsi: ["A. Berbicara kasar", "B. Berbakti dan taat kepada orang tua", "C. Mengabaikan nasihat ibu", "D. Membantah ayah"], jawabanBenar: 1 },
+            { tanya: "4. Manfaat jika kita berakhlak baik terhadap keluarga adalah...", opsi: ["A. Keluarga mudah bertengkar", "B. Keluarga menjadi harmonis dan bahagia", "C. Hidup menjadi tidak tenang", "D. Hati menjadi gelisah"], jawabanBenar: 1 },
+            { tanya: "5. Jika kita tidak berakhlak baik kepada keluarga, akibatnya adalah...", opsi: ["A. Mendapat ridha Allah Swt.", "B. Tumbuh rasa cinta dan kasih sayang", "C. Hubungan menjadi renggang dan tidak akur", "D. Keluarga harmonis"], jawabanBenar: 2 },
+            { tanya: "6. Perilaku dalam kehidupan sehari-hari yang menunjukkan akhlak baik di rumah adalah...", opsi: ["A. Membantu merapikan tempat tidur", "B. Malas belajar", "C. Suka membantah orang tua", "D. Bangun kesiangan"], jawabanBenar: 0 },
+            { tanya: "7. Tujuan utama kita berakhlak baik kepada keluarga di mata agama adalah untuk mendapatkan...", opsi: ["A. Hadiah dari paman", "B. Ridha Allah Swt.", "C. Uang jajan tambahan", "D. Pujian teman"], jawabanBenar: 1 },
+            { tanya: "8. Ketika dinasihati oleh orang tua, sikap kita sebaiknya...", opsi: ["A. Mendengarkan dengan baik", "B. Masuk kamar dan tidur", "C. Memotong pembicaraan", "D. Pura-pura tidak dengar"], jawabanBenar: 0 },
+            { tanya: "9. Kepada kakak, adik, maupun sepupu di dalam keluarga, kita harus saling...", opsi: ["A. Mengejek", "B. Menyayangi dan menghormati", "C. Menjauhi", "D. Memusuhi"], jawabanBenar: 1 },
+            { tanya: "10. Akibat bagi hati seseorang yang sering bertengkar dan tidak berakhlak terhadap keluarganya adalah...", opsi: ["A. Hati menjadi gelisah dan hidup tidak tenang", "B. Hati menjadi gembira", "C. Menjadi pribadi yang baik", "D. Pikiran menjadi jernih"], jawabanBenar: 0 }
+        ];
+
+        let indexSoalSaatIni = 0; let skorBenar = 0;
+
+        function mulaiKuis() {
+            indexSoalSaatIni = 0; skorBenar = 0;
+            document.getElementById('quiz-container').classList.remove('d-none');
+            document.getElementById('quiz-result').classList.add('d-none');
+            tampilkanSoal();
+        }
+        function tampilkanSoal() {
+            let dataSoal = soalKuis[indexSoalSaatIni];
+            document.getElementById('quiz-progress').innerText = `Soal ${indexSoalSaatIni + 1} dari ${soalKuis.length}`;
+            document.getElementById('quiz-question').innerText = dataSoal.tanya;
+            let containerOpsi = document.getElementById('quiz-options-container');
+            containerOpsi.innerHTML = ''; 
+            dataSoal.opsi.forEach((teksOpsi, indexOpsi) => {
+                let btn = document.createElement('button');
+                btn.className = 'quiz-option'; btn.innerText = teksOpsi;
+                btn.onclick = () => cekJawabanKuis(indexOpsi);
+                containerOpsi.appendChild(btn);
+            });
+        }
+        function cekJawabanKuis(indexPilihan) {
+            if(indexPilihan === soalKuis[indexSoalSaatIni].jawabanBenar) { skorBenar++; }
+            indexSoalSaatIni++;
+            if(indexSoalSaatIni < soalKuis.length) { tampilkanSoal(); } else { tampilkanHasilKuis(); }
+        }
+        function tampilkanHasilKuis() {
+            document.getElementById('quiz-container').classList.add('d-none');
+            document.getElementById('quiz-result').classList.remove('d-none');
+            document.getElementById('final-score').innerText = skorBenar * 10;
+        }
+
+        // ==========================================
+        // 4. FUNGSI REFLEKSI
+        // ==========================================
+        let totalMurid = 1; let muridSaatIni = 1;
+        let dataRefleksi = { senang: 0, sangat_paham: 0, bingung: 0, bosan: 0 };
+
+        function initRefleksi() {
+            let savedData = localStorage.getItem('refleksiPAIKelas4');
+            if (savedData) {
+                dataRefleksi = JSON.parse(savedData);
+                tampilkanHasilRefleksi();
+            } else {
+                document.getElementById('refleksi-step-1').classList.remove('d-none');
+                document.getElementById('refleksi-step-2').classList.add('d-none');
+                document.getElementById('refleksi-step-3').classList.add('d-none');
+            }
+        }
+        function mulaiRefleksi() {
+            totalMurid = parseInt(document.getElementById('jumlah-murid').value);
+            if(isNaN(totalMurid) || totalMurid < 1) { alert("Masukkan jumlah murid minimal 1."); return; }
+            muridSaatIni = 1; dataRefleksi = { senang: 0, sangat_paham: 0, bingung: 0, bosan: 0 };
+            document.getElementById('murid-ke').innerText = muridSaatIni;
+            document.getElementById('refleksi-step-1').classList.add('d-none');
+            document.getElementById('refleksi-step-2').classList.remove('d-none');
+        }
+        function catatRefleksi(jenis) {
+            dataRefleksi[jenis]++;
+            if (muridSaatIni < totalMurid) {
+                muridSaatIni++; document.getElementById('murid-ke').innerText = muridSaatIni;
+            } else {
+                localStorage.setItem('refleksiPAIKelas4', JSON.stringify(dataRefleksi));
+                tampilkanHasilRefleksi();
+            }
+        }
+        function tampilkanHasilRefleksi() {
+            document.getElementById('refleksi-step-1').classList.add('d-none');
+            document.getElementById('refleksi-step-2').classList.add('d-none');
+            document.getElementById('refleksi-step-3').classList.remove('d-none');
+            document.getElementById('hasil-senang').innerText = dataRefleksi.senang + " Murid";
+            document.getElementById('hasil-paham').innerText = dataRefleksi.sangat_paham + " Murid";
+            document.getElementById('hasil-bingung').innerText = dataRefleksi.bingung + " Murid";
+            document.getElementById('hasil-bosan').innerText = dataRefleksi.bosan + " Murid";
+        }
+        function hapusDataRefleksi() {
+            if(confirm("Hapus data refleksi seluruh murid?")) {
+                localStorage.removeItem('refleksiPAIKelas4');
+                document.getElementById('jumlah-murid').value = 1; 
+                initRefleksi(); 
+            }
+        }
+
+        // ==========================================
+        // 5. FULLSCREEN
+        // ==========================================
+        function toggleFullScreen() {
+            let elem = document.documentElement; let icon = document.getElementById('fs-icon');
+            if (!document.fullscreenElement) {
+                if (elem.requestFullscreen) elem.requestFullscreen();
+                else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+                icon.innerText = 'fullscreen_exit';
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+                else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+                icon.innerText = 'fullscreen';
+            }
+        }
+    </script>
+</body>
+</html>
