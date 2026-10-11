@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sholat Sunah SPA</title>
+    
+    <!-- Google Fonts: Ubuntu -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-blue: #0056b3;
+            --secondary-yellow: #ffc107;
+            --bg-light: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Ubuntu', sans-serif;
+            background-color: #222; /* Warna latar luar area 16:9 */
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            touch-action: none; /* Mencegah scroll pada body luar */
+        }
+
+        /* WRAPPER 16:9 RESPONSIVE */
+        #app-wrapper {
+            width: 100vw;
+            height: 100vh;
+            /* Mengunci rasio 16:9 secara presisi (Letterbox) */
+            max-width: calc(100vh * 16 / 9);
+            max-height: calc(100vw * 9 / 16);
+            position: relative;
+            background-color: var(--bg-light);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            overflow: hidden;
+            transition: background-image 0.5s ease-in-out;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        /* BACKGROUND KELAS */
+        .bg-home {
+            background-image: url('bg_home.jpg'); 
+        }
+        .bg-menu {
+            background-image: url('bg_menu.jpg'); 
+        }
+
+        /* Floating Controls (IFP Friendly) */
+        .floating-controls {
+            position: absolute; 
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 15px;
+        }
+        .control-btn {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+        .control-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* OVERLAY MENU */
+        #overlayMenu {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.75);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            padding: 20px;
+        }
+        #overlayMenu.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .menu-popup {
+            background-color: var(--primary-blue);
+            width: 100%;
+            max-width: 1100px;
+            border-radius: 30px;
+            padding: 50px 30px;
+            position: relative;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #overlayMenu.show .menu-popup {
+            transform: scale(1);
+        }
+        .overlay-close-btn {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2.5rem;
+            cursor: pointer;
+        }
+        .menu-cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            justify-content: center;
+            width: 100%;
+        }
+        .menu-card {
+            background-color: var(--secondary-yellow);
+            color: #000;
+            width: 170px;
+            height: 170px;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+        .menu-card i { font-size: 3.5rem; margin-bottom: 15px; color: var(--primary-blue); }
+        .menu-card span { font-size: 1.2rem; font-weight: bold; }
+        .menu-card:active { transform: scale(0.9); }
+
+        /* General Buttons */
+        .btn-primary { background-color: var(--primary-blue); border-color: var(--primary-blue); }
+        .btn-secondary-custom { background-color: var(--secondary-yellow); color: #000; font-weight: bold; }
+        .ifp-btn { padding: 15px 30px; font-size: 1.5rem; border-radius: 15px; margin: 10px; touch-action: manipulation; }
+
+        /* Sections (Halaman SPA) */
+        .spa-section { 
+            display: none; /* Disembunyikan secara default */
+            padding: 60px 40px 20px 40px; 
+            height: 100%; 
+            width: 100%;
+            overflow-y: auto;
+            position: absolute;
+            top: 0; left: 0;
+            touch-action: pan-y;
+        }
+        .spa-section.active { 
+            display: block; /* Hanya halaman yang aktif yang ditampilkan */
+        }
+
+        /* Tambahan shadow pada teks home */
+        .title-shadow {
+            text-shadow: 0px 3px 6px rgba(255, 255, 255, 0.9);
+        }
+
+        /* Materi Carousel */
+        .carousel-item {
+            height: 70vh;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .carousel-control-prev-icon, .carousel-control-next-icon { background-color: var(--primary-blue); border-radius: 50%; padding: 25px; }
+        .materi-title { color: var(--primary-blue); font-weight: bold; margin-bottom: 20px; }
+
+        /* Game Drag & Drop */
+        .game-container { display: flex; flex-direction: column; gap: 20px; }
+        .cards-area, .drop-area-container { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; }
+        .game-card { background-color: var(--secondary-yellow); padding: 15px 25px; border-radius: 10px; cursor: grab; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.2); touch-action: none; z-index: 10; }
+        .game-card.dragging { opacity: 0.8; transform: scale(1.05); position: absolute; z-index: 1000; }
+        .dropzone { border: 3px dashed var(--primary-blue); background-color: rgba(255,255,255,0.9); min-width: 250px; min-height: 200px; border-radius: 15px; padding: 15px; text-align: center; }
+        .dropzone.hover { background-color: #e2eefc; }
+
+        /* Refleksi & Latihan Soal Cards */
+        .soal-card, .refleksi-card { background: rgba(255, 255, 255, 0.95); padding: 30px; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .emoji-btn { font-size: 5rem; background: none; border: none; cursor: pointer; transition: transform 0.2s; touch-action: manipulation; }
+        .emoji-btn:active { transform: scale(0.9); }
+        .opsi-btn { width: 100%; text-align: left; margin-bottom: 15px; font-size: 1.3rem; padding: 15px 20px; border-radius: 10px; }
+        .opsi-benar { background-color: #198754 !important; color: white !important; }
+        .opsi-salah { background-color: #dc3545 !important; color: white !important; }
+    </style>
+</head>
+<body>
+
+    <!-- 16:9 WRAPPER -->
+    <div id="app-wrapper" class="bg-home">
+
+        <!-- Floating Controls -->
+        <div class="floating-controls">
+            <button class="control-btn" onclick="toggleFullScreen()" title="Fullscreen">
+                <i class="fa-solid fa-expand" id="fsIcon"></i>
+            </button>
+            <button class="control-btn" onclick="openMenu()" title="Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- OVERLAY MENU -->
+        <div id="overlayMenu">
+            <div class="menu-popup">
+                <button class="overlay-close-btn" onclick="closeMenu()" title="Tutup Menu">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <h2 class="text-white mb-5 display-5 fw-bold text-center"><i class="fa-solid fa-mosque me-3"></i>Menu Pembelajaran</h2>
+                <div class="menu-cards-container">
+                    <div class="menu-card" onclick="showSection('home')">
+                        <i class="fa-solid fa-house"></i><span>Home</span>
+                    </div>
+                    <div class="menu-card" onclick="showSection('materi')">
+                        <i class="fa-solid fa-book-open"></i><span>Materi</span>
+                    </div>
+                    <div class="menu-card" onclick="showSection('game')">
+                        <i class="fa-solid fa-gamepad"></i><span>Game</span>
+                    </div>
+                    <div class="menu-card" onclick="showSection('latihan')">
+                        <i class="fa-solid fa-pen-to-square"></i><span>Latihan Soal</span>
+                    </div>
+                    <div class="menu-card" onclick="showSection('refleksi')">
+                        <i class="fa-solid fa-face-smile"></i><span>Refleksi</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HOME SECTION -->
+        <div id="home" class="spa-section active">
+            <!-- Bungkus fleksbox terpisah dari class utama -->
+            <div class="h-100 w-100 d-flex flex-column justify-content-center align-items-center text-center">
+                <h1 class="display-1 title-shadow" style="color: var(--primary-blue); font-weight: 700;">Sholat Sunah</h1>
+                <h2 class="text-secondary mt-3 fs-1 title-shadow fw-bold">Sholat Rawatib, Sholat Dhuha dan Sholat Tahajud</h2>
+                <div class="mt-5">
+                    <button class="btn btn-primary ifp-btn shadow-lg" onclick="showSection('materi')">Mulai Belajar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MATERI SECTION -->
+        <div id="materi" class="spa-section pt-5">
+            <div class="h-100 w-100 container-fluid">
+                <div id="materiCarousel" class="carousel slide h-100" data-bs-touch="true" data-bs-interval="false">
+                    <div class="carousel-inner h-100 d-flex align-items-center">
+                        <div class="carousel-item active w-100">
+                            <div class="d-flex flex-column justify-content-center align-items-center h-100">
+                                <h2 class="materi-title">Video Pengantar</h2>
+                                <div class="bg-dark text-white d-flex justify-content-center align-items-center w-75 h-75 rounded">
+                                    <h3 class="text-center"><i class="fa-solid fa-play fa-3x mb-3"></i><br>Tempat Video Pembelajaran</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item w-100">
+                            <div class="d-flex flex-column justify-content-center h-100 px-5">
+                                <h2 class="materi-title text-center mb-4">Tujuan Pembelajaran</h2>
+                                <ul class="fs-3 lh-lg">
+                                    <li>Siswa dapat memahami pengertian sholat sunah Rawatib, Dhuha, dan Tahajud.</li>
+                                    <li>Siswa mengetahui waktu pelaksanaan masing-masing sholat sunah.</li>
+                                    <li>Siswa memahami hikmah dan keutamaan mengerjakan sholat sunah.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="carousel-item w-100">
+                            <div class="d-flex flex-column justify-content-center h-100 px-5">
+                                <h2 class="materi-title text-center mb-4">1. Shalat Sunnah Rawatib</h2>
+                                <div class="fs-3 lh-lg">
+                                    <p>Shalat sunnah yang dikerjakan sebelum atau sesudah shalat fardu.</p>
+                                    <ul>
+                                        <li>Sebelum shalat fardu disebut <strong>Qabliyah</strong>.</li>
+                                        <li>Sesudah shalat fardu disebut <strong>Ba'diyah</strong>.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item w-100">
+                            <div class="d-flex flex-column justify-content-center h-100 px-5 text-center">
+                                <h2 class="materi-title">Tabel Shalat Sunnah Rawatib</h2>
+                                <table class="table table-bordered table-striped fs-3 mt-4 align-middle">
+                                    <thead class="table-primary">
+                                        <tr><th>Shalat Fardu</th><th>Sebelum (Qabliyah)</th><th>Sesudah (Ba'diyah)</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>Subuh</td><td>2 rakaat</td><td>-</td></tr>
+                                        <tr><td>Zuhur</td><td>2 atau 4 rakaat</td><td>2 rakaat</td></tr>
+                                        <tr><td>Asar</td><td>2 atau 4 rakaat</td><td>-</td></tr>
+                                        <tr><td>Magrib</td><td>-</td><td>2 rakaat</td></tr>
+                                        <tr><td>Isya</td><td>-</td><td>2 rakaat</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="carousel-item w-100">
+                            <div class="d-flex flex-column justify-content-center h-100 px-5">
+                                <h2 class="materi-title text-center mb-4">2. Shalat Sunnah Duha</h2>
+                                <ul class="fs-3 lh-lg">
+                                    <li>Dikerjakan pada pagi hari setelah matahari terbit sampai sebelum waktu Zuhur.</li>
+                                    <li>Minimal 2 rakaat, bisa 2, 4, 6, 8 rakaat dan seterusnya.</li>
+                                    <li>Membiasakan bersyukur dan memohon keberkahan.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="carousel-item w-100">
+                            <div class="d-flex flex-column justify-content-center h-100 px-5">
+                                <h2 class="materi-title text-center mb-4">Keutamaan Shalat Duha</h2>
+                                <ul class="fs-3 lh-lg list-unstyled">
+                                    <li><i class="fa-solid fa-check text-success me-2"></i> Mendapat pahala dari Allah SWT.</li>
+                                    <li><i class="fa-solid fa-check text-success me-2"></i> Menjadi bentuk rasa syukur kepada Allah SWT.</li>
+                                    <li><i class="fa-solid fa-check text-success me-2"></i> Membiasakan diri melakukan ibadah sunnah.</li>
+                                    <li><i class="fa-solid fa-check text-success me-2"></i> Memohon keberkahan dalam aktivitas.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="carousel-item w-100">
+                            <div class="d-flex flex-column justify-content-center h-100 px-5">
+                                <h2 class="materi-title text-center mb-4">3. Shalat Sunnah Tahajud</h2>
+                                <ul class="fs-3 lh-lg">
+                                    <li>Dikerjakan pada malam hari setelah tidur.</li>
+                                    <li>Waktu paling utama adalah sepertiga malam terakhir sebelum waktu Subuh.</li>
+                                    <li>Minimal 2 rakaat, sesuai kemampuan.</li>
+                                    <li>Setelahnya kita berdoa kepada Allah SWT.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="carousel-item w-100">
+                            <div class="d-flex flex-column justify-content-center h-100 px-5">
+                                <h2 class="materi-title text-center mb-4">Keutamaan Shalat Tahajud</h2>
+                                <ul class="fs-3 lh-lg list-unstyled">
+                                    <li><i class="fa-solid fa-check text-success me-2"></i> Lebih dekat kepada Allah SWT.</li>
+                                    <li><i class="fa-solid fa-check text-success me-2"></i> Doa lebih mustajab.</li>
+                                    <li><i class="fa-solid fa-check text-success me-2"></i> Menenangkan hati.</li>
+                                    <li><i class="fa-solid fa-check text-success me-2"></i> Meningkatkan iman dan takwa.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="carousel-item w-100">
+                            <div class="d-flex flex-column justify-content-center h-100 px-5 text-center">
+                                <h2 class="materi-title">Perbedaan</h2>
+                                <table class="table table-bordered fs-4 mt-4 align-middle">
+                                    <thead class="table-warning">
+                                        <tr><th>Jenis Shalat</th><th>Waktu</th><th>Minimal</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td><span class="badge bg-primary fs-5">Rawatib</span></td><td>Sebelum/sesudah shalat fardu</td><td>2 rakaat</td></tr>
+                                        <tr><td><span class="badge bg-warning text-dark fs-5">Duha</span></td><td>Pagi hari setelah matahari terbit sampai sebelum Zuhur</td><td>2 rakaat</td></tr>
+                                        <tr><td><span class="badge bg-success fs-5">Tahajud</span></td><td>Malam hari setelah tidur</td><td>2 rakaat</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="carousel-item w-100">
+                            <div class="d-flex flex-column justify-content-center h-100 px-5">
+                                <h2 class="materi-title text-center mb-4">Hikmah Melaksanakan Shalat Sunnah</h2>
+                                <ol class="fs-3 lh-lg">
+                                    <li>Lebih dekat kepada Allah SWT.</li>
+                                    <li>Disiplin dalam beribadah.</li>
+                                    <li>Mengisi waktu dengan kegiatan yang bermanfaat.</li>
+                                    <li>Membiasakan diri berdoa dan bersyukur.</li>
+                                    <li>Meningkatkan keimanan dan ketakwaan.</li>
+                                    <li>Menyempurnakan ibadah shalat wajib.</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#materiCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#materiCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- GAME SECTION -->
+        <div id="game" class="spa-section pt-5">
+            <div class="container-fluid h-100 w-100">
+                <div class="refleksi-card mx-auto" style="max-width: 1000px;">
+                    <h2 class="text-center materi-title">Game Tarik Kartu</h2>
+                    <p class="text-center fs-4 mb-4">Tarik (Drag) kartu pernyataan di bawah ke dalam kotak sholat yang benar!</p>
+                    
+                    <div class="game-container">
+                        <div class="cards-area" id="cardsArea"></div>
+                        <hr class="my-4">
+                        <div class="drop-area-container">
+                            <div class="dropzone" data-category="rawatib">
+                                <h3 class="text-primary fw-bold">Rawatib</h3>
+                                <div class="drop-content d-flex flex-column gap-2 mt-3"></div>
+                            </div>
+                            <div class="dropzone" data-category="dhuha">
+                                <h3 class="text-warning fw-bold">Dhuha</h3>
+                                <div class="drop-content d-flex flex-column gap-2 mt-3"></div>
+                            </div>
+                            <div class="dropzone" data-category="tahajud">
+                                <h3 class="text-success fw-bold">Tahajud</h3>
+                                <div class="drop-content d-flex flex-column gap-2 mt-3"></div>
+                            </div>
+                        </div>
+                        <div class="text-center mt-5">
+                            <button class="btn btn-secondary-custom ifp-btn" onclick="checkGame()">Cek Jawaban</button>
+                            <button class="btn btn-outline-danger ifp-btn" onclick="resetGame()">Ulangi</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LATIHAN SOAL SECTION -->
+        <div id="latihan" class="spa-section pt-5">
+            <!-- Bungkus fleksbox terpisah dari class utama -->
+            <div class="h-100 w-100 d-flex align-items-center justify-content-center">
+                <div class="soal-card w-100 mx-auto" style="max-width: 900px;">
+                    <div class="d-flex justify-content-between mb-3 border-bottom pb-2">
+                        <span class="fs-4 fw-bold text-secondary" id="soalCounter">Soal 1/10</span>
+                        <span class="fs-4 fw-bold text-primary">Skor: <span id="skorValue">0</span></span>
+                    </div>
+                    <h3 id="pertanyaanText" class="mb-4 lh-base fs-2">Pertanyaan akan muncul di sini?</h3>
+                    <div id="opsiContainer"></div>
+                    <div class="text-end mt-4">
+                        <button id="btnNextSoal" class="btn btn-primary ifp-btn d-none" onclick="nextSoal()">Soal Selanjutnya <i class="fa-solid fa-arrow-right ms-2"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- REFLEKSI SECTION -->
+        <div id="refleksi" class="spa-section pt-5">
+            <!-- Bungkus fleksbox terpisah dari class utama -->
+            <div class="h-100 w-100 d-flex flex-column align-items-center justify-content-center">
+                
+                <div id="refleksiSetup" class="refleksi-card text-center w-100" style="max-width: 800px;">
+                    <h3 class="fs-1 materi-title">Berapa jumlah murid yang hadir hari ini?</h3>
+                    <div class="d-flex justify-content-center mt-4">
+                        <input type="number" id="inputJumlahMurid" class="form-control form-control-lg w-50 text-center fs-2" placeholder="0">
+                    </div>
+                    <button class="btn btn-primary ifp-btn mt-5" onclick="mulaiRefleksi()">Mulai Refleksi</button>
+                </div>
+
+                <div id="refleksiArea" class="refleksi-card text-center w-100 d-none" style="max-width: 900px;">
+                    <h3 class="fs-1 materi-title">Bagaimana perasaanmu setelah belajar hari ini?</h3>
+                    <div class="d-flex justify-content-center gap-5 mt-5">
+                        <button class="emoji-btn" onclick="pilihEmoji('senang')" title="Senang">😃</button>
+                        <button class="emoji-btn" onclick="pilihEmoji('biasa')" title="Biasa">😐</button>
+                        <button class="emoji-btn" onclick="pilihEmoji('bingung')" title="Bingung">🤔</button>
+                        <button class="emoji-btn" onclick="pilihEmoji('sedih')" title="Sedih">😔</button>
+                    </div>
+                    
+                    <div class="mt-5 pt-4 w-75 mx-auto">
+                        <h4 class="fs-2 mb-3 text-start">Progress Kelas: <span id="progressText" class="text-primary fw-bold">0/0</span> Murid</h4>
+                        <div class="progress" style="height: 40px; border-radius: 20px;">
+                            <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated bg-success fs-3 fw-bold" role="progressbar" style="width: 0%;">0%</div>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 pt-4">
+                        <button class="btn btn-danger ifp-btn" onclick="resetRefleksi()"><i class="fa-solid fa-trash-can me-2"></i> Reset Data Kelas</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div> <!-- End of app-wrapper -->
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // --- FULLSCREEN LOGIC ---
+        function toggleFullScreen() {
+            const doc = window.document;
+            const docEl = doc.documentElement;
+            const icon = document.getElementById('fsIcon');
+
+            const requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+            const cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+
+            if (!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+                requestFullScreen.call(docEl);
+                icon.classList.remove('fa-expand');
+                icon.classList.add('fa-compress');
+            } else {
+                cancelFullScreen.call(doc);
+                icon.classList.remove('fa-compress');
+                icon.classList.add('fa-expand');
+            }
+        }
+
+        // --- OVERLAY MENU LOGIC ---
+        function openMenu() {
+            document.getElementById('overlayMenu').classList.add('show');
+        }
+
+        function closeMenu() {
+            document.getElementById('overlayMenu').classList.remove('show');
+        }
+
+        // Close menu if clicking outside the popup box
+        document.getElementById('overlayMenu').addEventListener('click', function(e) {
+            if (e.target === this) closeMenu();
+        });
+
+        // --- ROUTING SPA & DYNAMIC BACKGROUND ---
+        function showSection(sectionId) {
+            closeMenu();
+            
+            // Mengubah background class pada container utama
+            const wrapper = document.getElementById('app-wrapper');
+            if (sectionId === 'home') {
+                wrapper.className = 'bg-home';
+            } else {
+                wrapper.className = 'bg-menu';
+            }
+
+            document.querySelectorAll('.spa-section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            
+            if(sectionId === 'game') resetGame();
+            if(sectionId === 'latihan') initSoal();
+            if(sectionId === 'refleksi') cekLocalStorageRefleksi();
+        }
+
+        // --- GAME DRAG & DROP LOGIC ---
+        const gameData = [
+            { id: 'g1', text: "Qabliyah & Ba'diyah", answer: 'rawatib' },
+            { id: 'g2', text: "Mengiringi sholat Fardu", answer: 'rawatib' },
+            { id: 'g3', text: "Pagi hari (setelah matahari terbit)", answer: 'dhuha' },
+            { id: 'g4', text: "Memohon keberkahan rezeki", answer: 'dhuha' },
+            { id: 'g5', text: "Malam hari setelah tidur", answer: 'tahajud' },
+            { id: 'g6', text: "Sepertiga malam terakhir", answer: 'tahajud' }
+        ];
+
+        let activeCard = null;
+        let initialX, initialY;
+        let currentX, currentY;
+        let xOffset = 0, yOffset = 0;
+
+        function initGame() {
+            const cardsArea = document.getElementById('cardsArea');
+            cardsArea.innerHTML = '';
+            
+            let shuffled = [...gameData].sort(() => 0.5 - Math.random());
+            
+            shuffled.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'game-card fs-5';
+                card.innerText = item.text;
+                card.dataset.id = item.id;
+                card.dataset.answer = item.answer;
+                
+                card.setAttribute('draggable', true);
+                card.addEventListener('dragstart', dragStart);
+                card.addEventListener('dragend', dragEnd);
+                
+                card.addEventListener('touchstart', touchStart, {passive: false});
+                card.addEventListener('touchmove', touchMove, {passive: false});
+                card.addEventListener('touchend', touchEnd);
+                
+                cardsArea.appendChild(card);
+            });
+
+            document.querySelectorAll('.dropzone').forEach(zone => {
+                zone.addEventListener('dragover', dragOver);
+                zone.addEventListener('dragenter', dragEnter);
+                zone.addEventListener('dragleave', dragLeave);
+                zone.addEventListener('drop', dragDrop);
+            });
+        }
+
+        function dragStart(e) { activeCard = this; setTimeout(() => this.classList.add('d-none'), 0); }
+        function dragEnd() { this.classList.remove('d-none'); activeCard = null; }
+        function dragOver(e) { e.preventDefault(); }
+        function dragEnter(e) { e.preventDefault(); this.classList.add('hover'); }
+        function dragLeave() { this.classList.remove('hover'); }
+        function dragDrop() {
+            this.classList.remove('hover');
+            if(activeCard) this.querySelector('.drop-content').appendChild(activeCard);
+        }
+
+        function touchStart(e) {
+            initialX = e.touches[0].clientX - xOffset;
+            initialY = e.touches[0].clientY - yOffset;
+            activeCard = this;
+            this.classList.add('dragging');
+        }
+        function touchMove(e) {
+            if (activeCard) {
+                e.preventDefault();
+                currentX = e.touches[0].clientX - initialX;
+                currentY = e.touches[0].clientY - initialY;
+                xOffset = currentX;
+                yOffset = currentY;
+                activeCard.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) scale(1.05)`;
+            }
+        }
+        function touchEnd(e) {
+            if (!activeCard) return;
+            activeCard.classList.remove('dragging');
+            activeCard.style.transform = "none";
+            
+            const changedTouch = e.changedTouches[0];
+            const elemBelow = document.elementFromPoint(changedTouch.clientX, changedTouch.clientY);
+            
+            if (elemBelow) {
+                const dropzone = elemBelow.closest('.dropzone');
+                if (dropzone) dropzone.querySelector('.drop-content').appendChild(activeCard);
+            }
+            
+            xOffset = 0; yOffset = 0;
+            activeCard = null;
+        }
+
+        function checkGame() {
+            let correct = 0;
+            const cards = document.querySelectorAll('.game-card');
+            if(cards.length === 0) return;
+
+            cards.forEach(card => {
+                const parentZone = card.closest('.dropzone');
+                if (parentZone) {
+                    if (parentZone.dataset.category === card.dataset.answer) {
+                        card.style.backgroundColor = '#198754';
+                        card.style.color = 'white';
+                        correct++;
+                    } else {
+                        card.style.backgroundColor = '#dc3545';
+                        card.style.color = 'white';
+                    }
+                }
+            });
+            if(correct === gameData.length) {
+                setTimeout(() => alert("Luar Biasa! Semua kartu diletakkan di tempat yang benar!"), 200);
+            }
+        }
+
+        function resetGame() { initGame(); }
+
+        // --- LATIHAN SOAL LOGIC ---
+        const soalData = [
+            { q: "Shalat sunnah yang dikerjakan sebelum atau sesudah shalat fardu disebut?", o: ["Tahajud", "Dhuha", "Rawatib", "Tarawih"], a: 2 },
+            { q: "Shalat sunnah rawatib yang dikerjakan SEBELUM shalat fardu disebut?", o: ["Ba'diyah", "Qabliyah", "Witir", "Tahiyatul Masjid"], a: 1 },
+            { q: "Berapa rakaat shalat sunnah ba'diyah Magrib?", o: ["2 Rakaat", "4 Rakaat", "Tidak ada", "6 Rakaat"], a: 0 },
+            { q: "Shalat sunnah yang dikerjakan pada pagi hari setelah matahari terbit adalah?", o: ["Tahajud", "Dhuha", "Rawatib", "Istikharah"], a: 1 },
+            { q: "Salah satu keutamaan shalat Dhuha adalah?", o: ["Menggugurkan dosa besar", "Wajib masuk surga", "Memohon keberkahan dalam aktivitas", "Menjadi syarat sholat fardu"], a: 2 },
+            { q: "Kapan waktu paling utama melaksanakan shalat Tahajud?", o: ["Setelah shalat Isya", "Tengah malam sebelum tidur", "Sepertiga malam terakhir", "Setelah shalat Subuh"], a: 2 },
+            { q: "Apa syarat utama sebelum melaksanakan shalat Tahajud?", o: ["Harus puasa", "Harus tidur terlebih dahulu", "Harus di masjid", "Harus membaca Yasin"], a: 1 },
+            { q: "Shalat fardu apa yang TIDAK memiliki shalat sunnah Ba'diyah?", o: ["Zuhur dan Asar", "Magrib dan Isya", "Subuh dan Asar", "Subuh dan Zuhur"], a: 2 },
+            { q: "Berapa jumlah rakaat minimal untuk shalat Tahajud dan Dhuha?", o: ["1 Rakaat", "2 Rakaat", "3 Rakaat", "4 Rakaat"], a: 1 },
+            { q: "Berikut ini yang merupakan hikmah melaksanakan shalat sunnah adalah?", o: ["Lebih dekat kepada Allah SWT", "Mendapat pujian teman", "Bebas dari sholat fardu", "Cepat kaya raya"], a: 0 }
+        ];
+
+        let currentSoalIndex = 0;
+        let skorSoal = 0;
+        let soalTerjawab = false;
+
+        function initSoal() {
+            currentSoalIndex = 0;
+            skorSoal = 0;
+            document.getElementById('skorValue').innerText = skorSoal;
+            renderSoal();
+        }
+
+        function renderSoal() {
+            soalTerjawab = false;
+            document.getElementById('btnNextSoal').classList.add('d-none');
+            
+            const soal = soalData[currentSoalIndex];
+            document.getElementById('soalCounter').innerText = `Soal ${currentSoalIndex + 1}/${soalData.length}`;
+            document.getElementById('pertanyaanText').innerText = soal.q;
+            
+            const opsiContainer = document.getElementById('opsiContainer');
+            opsiContainer.innerHTML = '';
+            
+            soal.o.forEach((opsi, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'btn btn-outline-primary opsi-btn';
+                btn.innerText = opsi;
+                btn.onclick = () => cekJawaban(index, btn);
+                opsiContainer.appendChild(btn);
+            });
+        }
+
+        function cekJawaban(selectedIndex, btnElement) {
+            if(soalTerjawab) return;
+            soalTerjawab = true;
+            
+            const correctIndex = soalData[currentSoalIndex].a;
+            const semuaBtn = document.querySelectorAll('.opsi-btn');
+            
+            if(selectedIndex === correctIndex) {
+                btnElement.classList.add('opsi-benar');
+                skorSoal += 10;
+                document.getElementById('skorValue').innerText = skorSoal;
+            } else {
+                btnElement.classList.add('opsi-salah');
+                semuaBtn[correctIndex].classList.add('opsi-benar');
+            }
+            
+            document.getElementById('btnNextSoal').classList.remove('d-none');
+            if(currentSoalIndex === soalData.length - 1) {
+                document.getElementById('btnNextSoal').innerHTML = 'Selesai & Lihat Hasil <i class="fa-solid fa-flag-checkered ms-2"></i>';
+            }
+        }
+
+        function nextSoal() {
+            currentSoalIndex++;
+            if(currentSoalIndex < soalData.length) {
+                renderSoal();
+            } else {
+                alert(`Latihan Selesai!\nSkor Akhir Anda: ${skorSoal} dari 100`);
+                initSoal();
+            }
+        }
+
+        // --- REFLEKSI LOGIC ---
+        function cekLocalStorageRefleksi() {
+            const total = localStorage.getItem('totalMurid');
+            const voted = localStorage.getItem('votedMurid');
+            
+            if(total) {
+                document.getElementById('refleksiSetup').classList.add('d-none');
+                document.getElementById('refleksiArea').classList.remove('d-none');
+                updateProgressUI(parseInt(total), parseInt(voted || 0));
+            } else {
+                document.getElementById('refleksiSetup').classList.remove('d-none');
+                document.getElementById('refleksiArea').classList.add('d-none');
+            }
+        }
+
+        function mulaiRefleksi() {
+            const input = document.getElementById('inputJumlahMurid').value;
+            if(input && input > 0) {
+                localStorage.setItem('totalMurid', input);
+                localStorage.setItem('votedMurid', 0);
+                cekLocalStorageRefleksi();
+            } else {
+                alert("Masukkan jumlah murid yang valid!");
+            }
+        }
+
+        function pilihEmoji(tipe) {
+            let total = parseInt(localStorage.getItem('totalMurid'));
+            let voted = parseInt(localStorage.getItem('votedMurid'));
+            
+            if(voted < total) {
+                voted++;
+                localStorage.setItem('votedMurid', voted);
+                updateProgressUI(total, voted);
+                
+                const bar = document.getElementById('progressBar');
+                bar.classList.add('bg-warning');
+                setTimeout(() => bar.classList.remove('bg-warning'), 300);
+
+                if(voted === total) {
+                    setTimeout(() => alert("Terima kasih! Semua murid telah melakukan refleksi hari ini."), 500);
+                }
+            } else {
+                alert("Semua murid sudah memilih!");
+            }
+        }
+
+        function updateProgressUI(total, voted) {
+            const percent = Math.round((voted / total) * 100);
+            document.getElementById('progressText').innerText = `${voted}/${total}`;
+            const bar = document.getElementById('progressBar');
+            bar.style.width = `${percent}%`;
+            bar.innerText = `${percent}%`;
+        }
+
+        function resetRefleksi() {
+            if(confirm("Apakah Anda yakin ingin menghapus data refleksi kelas ini?")) {
+                localStorage.removeItem('totalMurid');
+                localStorage.removeItem('votedMurid');
+                document.getElementById('inputJumlahMurid').value = '';
+                cekLocalStorageRefleksi();
+            }
+        }
+
+        // Initialize On Load
+        window.onload = () => { initGame(); };
+    </script>
+</body>
+</html>
