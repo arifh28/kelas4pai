@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Petualangan Santri Chibi - RPG Edukasi Islami</title>
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome 6 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <!-- Phaser 3.80 -->
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+
+    <style>
+        * {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            background-color: #064e3b; overflow: hidden;
+        }
+        #game-container {
+            width: 100vw; height: 100vh; position: relative;
+        }
+
+        /* HUD Atas */
+        .hud-bar {
+            position: fixed; top: 12px; left: 12px; right: 12px;
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 8px;
+            z-index: 100; pointer-events: none;
+        }
+        .hud-card {
+            background: rgba(6, 78, 59, 0.92);
+            backdrop-filter: blur(8px);
+            border: 2px solid #10b981;
+            color: #f8fafc;
+            padding: 8px 16px;
+            border-radius: 14px;
+            pointer-events: auto;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.45);
+        }
+
+        /* Tombol Interaksi Mengambang */
+        #interact-prompt {
+            position: fixed; bottom: 135px; left: 50%;
+            transform: translateX(-50%);
+            z-index: 105; display: none;
+            animation: bouncePrompt 1s infinite alternate;
+        }
+        @keyframes bouncePrompt {
+            from { transform: translateX(-50%) translateY(0); }
+            to { transform: translateX(-50%) translateY(-6px); }
+        }
+
+        /* Notifikasi Gerbang Level Terbuka */
+        #portal-banner {
+            position: fixed; top: 75px; left: 50%;
+            transform: translateX(-50%);
+            z-index: 102; display: none;
+        }
+
+        /* Modal Dialog & Kuis */
+        #dialog-overlay {
+            position: fixed; inset: 0;
+            background: rgba(2, 44, 34, 0.72);
+            backdrop-filter: blur(4px);
+            display: none; justify-content: center; align-items: flex-end;
+            padding: 20px; z-index: 200;
+        }
+        .dialog-card {
+            width: 100%; max-width: 680px;
+            background: #064e3b;
+            border: 3px solid #fbbf24;
+            border-radius: 20px;
+            padding: 22px;
+            color: #f8fafc;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.75);
+            margin-bottom: 10px;
+        }
+        .npc-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 6px 14px; border-radius: 50px;
+            font-weight: 700; font-size: 0.9rem; margin-bottom: 12px;
+        }
+        .option-btn {
+            text-align: left; font-weight: 600;
+            padding: 11px 16px; border-radius: 12px;
+            background: #022c22; color: #ecfdf5;
+            border: 2px solid #059669; transition: 0.15s;
+        }
+        .option-btn:hover:not(:disabled) {
+            background: #047857; border-color: #fbbf24; color: #fff;
+        }
+        .option-btn.correct {
+            background: #15803d !important; border-color: #4ade80 !important; color: #fff !important;
+        }
+        .option-btn.wrong {
+            background: #991b1b !important; border-color: #f87171 !important; color: #fff !important;
+        }
+
+        /* Kontrol Layar Sentuh (D-Pad) */
+        .touch-controls {
+            position: fixed; bottom: 20px; left: 20px;
+            z-index: 110; display: grid;
+            grid-template-columns: repeat(3, 52px);
+            grid-template-rows: repeat(3, 52px);
+            gap: 5px; opacity: 0.88;
+        }
+        .dpad-btn {
+            background: rgba(6, 78, 59, 0.92);
+            border: 2px solid #10b981; color: #fff;
+            border-radius: 12px; display: flex;
+            justify-content: center; align-items: center;
+            font-size: 1.2rem; cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+        .dpad-btn:active { background: #f59e0b; border-color: #fef08a; }
+
+        .action-touch-btn {
+            position: fixed; bottom: 45px; right: 25px;
+            width: 72px; height: 72px; border-radius: 50%;
+            background: linear-gradient(135deg, #10b981, #047857);
+            border: 3px solid #fbbf24; color: #fff;
+            font-weight: 800; font-size: 0.9rem;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            z-index: 110; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.5);
+            cursor: pointer;
+        }
+        .action-touch-btn:active { transform: scale(0.93); }
+    </style>
+</head>
+<body>
+
+    <!-- HUD Informasi Atas -->
+    <div class="hud-bar">
+        <div class="hud-card d-flex align-items-center flex-wrap gap-3">
+            <div>
+                <i class="fa-solid fa-mosque text-warning me-1"></i>
+                <span id="ui-level-name" class="fw-bold text-warning">Level 1: Taman Pesantren</span>
+            </div>
+            <div class="vr bg-light opacity-50"></div>
+            <div>
+                <i class="fa-solid fa-star text-warning me-1"></i>
+                <span class="fw-bold">Poin: <span id="ui-score" class="text-warning">0</span></span>
+            </div>
+            <div class="vr bg-light opacity-50"></div>
+            <div>
+                <i class="fa-solid fa-book-quran text-info me-1"></i>
+                <span class="fw-bold">Soal Level Ini: <span id="ui-quest" class="text-info">0 / 10</span></span>
+            </div>
+        </div>
+
+        <!-- Pemilih Level Cepat (Untuk Pengujian / Navigasi Guru) -->
+        <div class="hud-card d-flex align-items-center gap-2">
+            <span class="small fw-bold text-light">Pindah Level:</span>
+            <button class="btn btn-sm btn-outline-warning fw-bold" onclick="window.changeGameLevel(1)">Lv.1</button>
+            <button class="btn btn-sm btn-outline-warning fw-bold" onclick="window.changeGameLevel(2)">Lv.2</button>
+            <button class="btn btn-sm btn-outline-warning fw-bold" onclick="window.changeGameLevel(3)">Lv.3</button>
+        </div>
+    </div>
+
+    <!-- Banner Gerbang Level Terbuka -->
+    <div id="portal-banner">
+        <div class="alert alert-warning border-2 border-light shadow-lg py-2 px-4 rounded-pill fw-bold d-flex align-items-center gap-2 mb-0">
+            <i class="fa-solid fa-door-open fs-5 text-success"></i>
+            <span>Alhamdulillah! 10 Soal selesai. Masuk ke <b>Gerbang Cahaya Emas</b> di tengah peta untuk lanjut ke Level berikutnya!</span>
+        </div>
+    </div>
+
+    <!-- Tombol Prompt Saat Dekat NPC -->
+    <div id="interact-prompt">
+        <button class="btn btn-warning fw-bold px-4 py-2 rounded-pill shadow-lg border-2 border-light" onclick="window.triggerNPCInteraction()">
+            <i class="fa-solid fa-comments me-2"></i>Ucap Salam ke <span id="prompt-npc-name">Santri</span> (Spasi)
+        </button>
+    </div>
+
+    <!-- Modal Dialog & Kuis -->
+    <div id="dialog-overlay">
+        <div class="dialog-card">
+            <div class="d-flex justify-content-between align-items-start">
+                <div id="dialog-badge" class="npc-badge bg-warning text-dark">
+                    <i class="fa-solid fa-user-check"></i>
+                    <span id="dialog-npc-name">Nama Santri</span>
+                </div>
+                <span id="dialog-type-tag" class="badge bg-success">Santri</span>
+            </div>
+
+            <p id="dialog-text" class="fs-5 fw-semibold mb-3" style="line-height: 1.55;"></p>
+
+            <!-- Wadah Pilihan Ganda (Khusus 10 NPC Soal) -->
+            <div id="quiz-options" class="d-grid gap-2 mb-3" style="display: none !important;"></div>
+
+            <!-- Feedback Jawaban -->
+            <div id="quiz-feedback" class="alert py-2 px-3 fw-bold mb-3" style="display: none;"></div>
+
+            <div class="d-flex justify-content-end">
+                <button id="btn-close-dialog" class="btn btn-warning fw-bold px-4 rounded-pill" onclick="window.closeNPCDialog()">
+                    Tutup <span class="text-dark small ms-1">(Spasi)</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kontrol Layar Sentuh (D-Pad) -->
+    <div class="touch-controls">
+        <div></div>
+        <div class="dpad-btn" data-dir="up"><i class="fa-solid fa-chevron-up"></i></div>
+        <div></div>
+        <div class="dpad-btn" data-dir="left"><i class="fa-solid fa-chevron-left"></i></div>
+        <div></div>
+        <div class="dpad-btn" data-dir="right"><i class="fa-solid fa-chevron-right"></i></div>
+        <div></div>
+        <div class="dpad-btn" data-dir="down"><i class="fa-solid fa-chevron-down"></i></div>
+        <div></div>
+    </div>
+
+    <!-- Tombol Aksi Layar Sentuh -->
+    <div class="action-touch-btn" onclick="window.triggerNPCInteraction()">
+        <i class="fa-solid fa-handshake-simple fs-5"></i>
+        <span>SALAM</span>
+    </div>
+
+    <!-- Kanvas Phaser -->
+    <div id="game-container"></div>
+
+    <!-- Script Utama Game -->
+    <script src="script.js"></script>
+</body>
+</html>
