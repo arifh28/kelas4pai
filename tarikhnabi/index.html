@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dakwah Rasulullah SAW - Kelas 4 SD</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Tema Warna Kustom menyesuaikan desain ceria */
+            --primary-color: #0d9488; /* Teal */
+            --primary-hover: #0f766e;
+            --secondary-color: #f59e0b; /* Amber */
+            --bg-body: #f0fdfa;
+            --font-heading: 'Plus Jakarta Sans', sans-serif;
+            --font-body: 'Nunito', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-body);
+            background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
+            overflow: hidden; 
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1, h2, h3, h4, h5, h6, .font-heading {
+            font-family: var(--font-heading) !important;
+        }
+        
+        .transition-all { transition: all 0.3s ease; }
+        
+        /* Layout Utama */
+        .main-container {
+            flex-grow: 1;
+            position: relative;
+        }
+
+        .content-section {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-body);
+        }
+
+        .scrollable-section {
+            overflow-y: auto;
+            height: 100%;
+            padding-bottom: 80px;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 12px; }
+        ::-webkit-scrollbar-track { background: #ccfbf1; }
+        ::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 6px; }
+        
+        /* Slide Animasi */
+        .slide { 
+            display: none; 
+            animation: fadeIn 0.4s ease-in-out; 
+            height: 100%;
+            width: 100%;
+        }
+        .slide.active { 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            text-align: center; 
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+
+        .slide-content-box {
+            width: 95%;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            border-radius: 1.5rem;
+            border: 4px solid #e2e8f0;
+            background: #fff;
+        }
+
+        .slide img { max-height: 40vh; object-fit: contain; width: auto; margin-top: 1rem; }
+
+        .video-container {
+            width: 100%;
+            max-width: 800px;
+            aspect-ratio: 16/9;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border: 8px solid var(--primary-color);
+        }
+        .video-container iframe { width: 100%; height: 100%; }
+
+        /* Kustomisasi UI Element */
+        .rounded-xl { border-radius: 1rem !important; }
+        .rounded-2xl { border-radius: 1.5rem !important; }
+        .rounded-3xl { border-radius: 2rem !important; }
+        
+        .shadow-custom { box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        
+        /* Button Kustom 3D */
+        .btn-3d-primary {
+            background-color: var(--secondary-color);
+            color: #fff;
+            box-shadow: 0 6px 0 #b45309;
+            border: none;
+            transition: all 0.2s;
+        }
+        .btn-3d-primary:hover {
+            background-color: #d97706;
+            transform: translateY(2px);
+            box-shadow: 0 4px 0 #b45309;
+            color: #fff;
+        }
+
+        /* Quiz Buttons */
+        .quiz-btn {
+            border: 4px solid #e2e8f0;
+            background: #f8fafc;
+            border-radius: 1.25rem;
+            text-align: left;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .quiz-btn:hover:not(:disabled) {
+            border-color: var(--primary-color);
+            background: #f0fdfa;
+        }
+        .quiz-btn:disabled {
+            cursor: default;
+        }
+
+        /* Emoji Button FontAwesome */
+        .emoji-btn { 
+            filter: grayscale(100%); 
+            opacity: 0.5; 
+            transition: transform 0.2s;
+            background: transparent;
+            border: none;
+        }
+        .emoji-btn.selected { 
+            filter: grayscale(0%); 
+            opacity: 1; 
+            transform: scale(1.3); 
+            background-color: #ccfbf1; 
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Audio Player untuk Feedback Soal -->
+    <audio id="audioBenar" src="benar.mp3" preload="auto"></audio>
+    <audio id="audioSalah" src="salah.mp3" preload="auto"></audio>
+
+    <!-- Header / Navbar -->
+    <header class="text-white shadow px-4 d-flex align-items-center justify-content-between z-2" style="background-color: var(--primary-color); height: 80px;">
+        <div class="d-flex align-items-center gap-3">
+            <button class="btn btn-light" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" style="border-radius: 0.75rem;">
+                <i class="fa-solid fa-bars fs-4 text-dark"></i>
+            </button>
+            <h1 class="fs-4 fw-bolder m-0 d-none d-sm-block text-white font-heading">Fajar Islam di Makkah</h1>
+        </div>
+        <button id="fullscreenBtn" class="btn btn-warning fw-bold d-flex align-items-center gap-2" style="border-radius: 0.75rem;">
+            <i id="fsIcon" class="fa-solid fa-expand fs-5"></i>
+        </button>
+    </header>
+
+    <!-- Sidebar Navigation (Offcanvas Bootstrap) -->
+    <div class="offcanvas offcanvas-start shadow" tabindex="-1" id="sidebarMenu" aria-labelledby="sidebarMenuLabel" style="width: 320px;">
+        <div class="offcanvas-header bg-light border-bottom">
+            <h5 class="offcanvas-title font-heading fw-bold" id="sidebarMenuLabel" style="color: var(--primary-color);">Menu Utama</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column gap-3 p-4">
+            <button onclick="switchTab('beranda')" class="nav-btn btn btn-lg text-start fw-bold rounded-3 d-flex align-items-center gap-3 active-nav" style="background-color: var(--primary-color); color: white;">
+                <i class="fa-solid fa-house fs-3 w-30px text-center"></i> Beranda
+            </button>
+            <button onclick="switchTab('materi')" class="nav-btn btn btn-light btn-lg text-start fw-bold rounded-3 d-flex align-items-center gap-3 text-secondary">
+                <i class="fa-solid fa-book-open fs-3 w-30px text-center"></i> Materi
+            </button>
+            <button onclick="switchTab('soal')" class="nav-btn btn btn-light btn-lg text-start fw-bold rounded-3 d-flex align-items-center gap-3 text-secondary">
+                <i class="fa-solid fa-pen-to-square fs-3 w-30px text-center"></i> Latihan Soal
+            </button>
+            <button onclick="switchTab('refleksi')" class="nav-btn btn btn-light btn-lg text-start fw-bold rounded-3 d-flex align-items-center gap-3 text-secondary">
+                <i class="fa-solid fa-face-smile-beam fs-3 w-30px text-center"></i> Refleksi
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="main-container">
+        
+        <!-- SECTION: BERANDA -->
+        <section id="sec-beranda" class="content-section d-flex flex-column align-items-center justify-content-center p-4">
+            <div class="bg-white p-5 rounded-3xl shadow-custom text-center" style="max-width: 900px; border: 8px solid #ccfbf1;">
+                <h1 class="display-3 font-heading fw-bolder mb-4" style="color: var(--primary-color);">Selamat Datang!</h1>
+                <p class="fs-4 text-secondary mb-5">
+                    Media Pembelajaran Interaktif PAI Kelas 4 SD<br>
+                    <strong class="font-heading text-dark">Meneladani Keberanian dan Ketabahan Dakwah Rasulullah SAW</strong>
+                </p>
+                <button onclick="switchTab('materi')" class="btn btn-3d-primary btn-lg rounded-pill px-5 py-3 fs-3 fw-bold d-inline-flex align-items-center gap-3">
+                    Mulai Belajar <i class="fa-solid fa-rocket"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- SECTION: MATERI -->
+        <section id="sec-materi" class="content-section d-none flex-column bg-white">
+            <div class="w-100 bg-light" style="height: 8px;">
+                <div id="slideProgress" class="h-100 transition-all" style="width: 10%; background-color: var(--primary-color);"></div>
+            </div>
+
+            <div id="slideContainer" class="flex-grow-1 position-relative w-100 d-flex align-items-center justify-content-center p-3">
+                
+                <!-- Slide 1: Video 1 -->
+                <div class="slide active">
+                    <div class="slide-content-box bg-light">
+                        <h2 class="h1 font-heading fw-bold mb-4" style="color: var(--primary-color);">Masa Awal Kerasulan Nabi Muhammad SAW</h2>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/Ps496nANIBc" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 2: Video 2 -->
+                <div class="slide">
+                    <div class="slide-content-box bg-light">
+                        <h2 class="h1 font-heading fw-bold mb-4" style="color: var(--primary-color);">Dakwah Sirriyah dan Perjuangan Awal</h2>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/mTxMVP9dqNA" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 3: Video 3 -->
+                <div class="slide">
+                    <div class="slide-content-box bg-light">
+                        <h2 class="h1 font-heading fw-bold mb-4" style="color: var(--primary-color);">Ketabahan Menghadapi Ujian Kafir Quraisy</h2>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/YJZhNl546PA" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 4 -->
+                <div class="slide">
+                    <div class="slide-content-box" style="background-color: #f0fdf4; border-color: #bbf7d0;">
+                        <h2 class="display-5 font-heading fw-bolder mb-4 text-success">Peristiwa Awal Kerasulan</h2>
+                        <p class="fs-3 lh-base text-dark text-start">
+                            Di tengah kondisi moral masyarakat Makkah yang menyembah berhala, Nabi Muhammad SAW sering menyendiri di <strong>Gua Hira, Jabal Nur</strong>.<br><br>
+                            Pada usia 40 tahun (17 Ramadan), Malaikat Jibril turun membawa wahyu pertama, yaitu <strong>Surat Al-'Alaq ayat 1-5</strong> dengan perintah "Iqra'!" (Bacalah!). Peristiwa ini menjadi penanda diangkatnya Beliau sebagai Rasul Allah.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Slide 5 -->
+                <div class="slide">
+                    <div class="slide-content-box" style="background-color: #fff7ed; border-color: #fed7aa;">
+                        <h2 class="display-5 font-heading fw-bolder mb-4 text-warning">Dukungan Keluarga Tercinta</h2>
+                        <p class="fs-3 lh-base text-dark text-start">
+                            Setelah menerima wahyu, Rasulullah SAW pulang dalam keadaan gemetar. Istri tercinta Beliau, <strong>Khadijah binti Khuwailid</strong>, menyelimuti dan menenangkan hati Beliau.<br><br>
+                            Khadijah mengajak Beliau bertemu <strong>Waraqah bin Naufal</strong>, pendeta Nasrani yang membenarkan bahwa yang datang adalah Malaikat Jibril dan Muhammad SAW adalah Nabi pilihan Allah.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Slide 6 -->
+                <div class="slide">
+                    <div class="slide-content-box" style="background-color: #f0f9ff; border-color: #bae6fd;">
+                        <h2 class="display-5 font-heading fw-bolder mb-4 text-info">Dakwah Sembunyi-sembunyi (Sirriyah)</h2>
+                        <p class="fs-3 lh-base text-dark text-start">
+                            Wahyu berikutnya, <strong>Surat Al-Muddassir ayat 1-7</strong>, memerintahkan Nabi mulai berdakwah. Dakwah dilakukan sembunyi-sembunyi selama kurang lebih <strong>3 tahun</strong>.<br><br>
+                            Pusat kegiatan dan pembinaan keimanan dilakukan secara rahasia di rumah seorang sahabat bernama <strong>Arqam bin Abi Al-Arqam (Darul Arqam)</strong> demi menjaga keselamatan pengikut yang masih sedikit.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Slide 7 -->
+                <div class="slide">
+                    <div class="slide-content-box" style="background-color: #faf5ff; border-color: #e9d5ff;">
+                        <h2 class="display-5 font-heading fw-bolder mb-4" style="color: #7e22ce;">Assabiqunal Awwalun</h2>
+                        <p class="fs-3 lh-base text-dark text-start mb-4">
+                            Mereka adalah orang-orang yang <strong>pertama kali beriman</strong> kepada ajaran Islam, di antaranya:
+                        </p>
+                        <ul class="fs-3 text-start list-unstyled">
+                            <li class="mb-3"><i class="fa-solid fa-check-circle me-3" style="color: #a855f7;"></i> <strong>Khadijah ra.</strong> (Istri Nabi)</li>
+                            <li class="mb-3"><i class="fa-solid fa-check-circle me-3" style="color: #a855f7;"></i> <strong>Ali bin Abi Thalib ra.</strong> (Sepupu Nabi)</li>
+                            <li class="mb-3"><i class="fa-solid fa-check-circle me-3" style="color: #a855f7;"></i> <strong>Abu Bakar Ash-Shiddiq ra.</strong> (Sahabat)</li>
+                            <li class="mb-3"><i class="fa-solid fa-check-circle me-3" style="color: #a855f7;"></i> <strong>Zaid bin Haritsah ra. & Bilal bin Rabah ra.</strong></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Slide 8 -->
+                <div class="slide">
+                    <div class="slide-content-box" style="background-color: #ecfdf5; border-color: #a7f3d0;">
+                        <h2 class="display-5 font-heading fw-bolder mb-4 text-success">Dakwah Terang-terangan (Jahriyah)</h2>
+                        <p class="fs-3 lh-base text-dark text-start">
+                            Allah menurunkan <strong>Surat Al-Hijr ayat 94</strong> untuk memulai dakwah terang-terangan. Nabi mengumpulkan masyarakat di <strong>Bukit Shafa</strong>.<br><br>
+                            Namun, ketika Beliau mengajak mereka menyembah Allah, paman Beliau sendiri yaitu <strong>Abu Lahab</strong> langsung berteriak menolak dan mencaci-maki Rasulullah SAW.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Slide 9 -->
+                <div class="slide">
+                    <div class="slide-content-box" style="background-color: #fef2f2; border-color: #fecaca;">
+                        <h2 class="display-5 font-heading fw-bolder mb-4 text-danger">Ketabahan Menghadapi Ujian</h2>
+                        <p class="fs-3 lh-base text-dark text-start">
+                            Kafir Quraisy mulai menyiksa sahabat secara fisik, seperti siksaan terhadap Bilal bin Rabah, dan gugurnya <strong>Sumayyah</strong> sebagai syahidah pertama.<br><br>
+                            Namun Nabi tetap teguh: <em>"Sekiranya mereka meletakkan matahari di tangan kananku dan bulan di tangan kiriku... aku tidak akan meninggalkannya."</em> Nabi lalu mengizinkan hijrah pertama ke <strong>Habasyah</strong>.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Slide 10 -->
+                <div class="slide">
+                    <div class="slide-content-box" style="background-color: #fefce8; border-color: #fef08a;">
+                        <h2 class="display-5 font-heading fw-bolder mb-4 text-warning">Ayo Ingat Rangkuman Ini!</h2>
+                        <ul class="fs-3 lh-lg text-dark text-start list-unstyled">
+                            <li><i class="fa-solid fa-star text-warning me-3"></i> Wahyu pertama: <strong>Al-'Alaq 1-5</strong> di <strong>Gua Hira</strong>.</li>
+                            <li><i class="fa-solid fa-star text-warning me-3"></i> <strong>Dakwah Sirriyah</strong> (3 tahun) di Darul Arqam.</li>
+                            <li><i class="fa-solid fa-star text-warning me-3"></i> <strong>Assabiqunal Awwalun</strong>: Golongan pertama masuk Islam.</li>
+                            <li><i class="fa-solid fa-star text-warning me-3"></i> <strong>Dakwah Jahriyah</strong>: Dimulai dari Bukit Shafa.</li>
+                            <li><i class="fa-solid fa-star text-warning me-3"></i> Nabi Muhammad SAW & sahabat memiliki <strong>ketabahan luar biasa</strong>.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide Controls -->
+            <div class="bg-white border-top p-3 flex-shrink-0 d-flex justify-content-between align-items-center px-4 shadow-sm">
+                <button id="prevBtn" class="btn btn-secondary btn-lg fw-bold rounded-pill px-4" onclick="changeSlide(-1)">
+                    <i class="fa-solid fa-arrow-left"></i> <span class="d-none d-sm-inline ms-2">Sebelumnya</span>
+                </button>
+                <span id="slideCounter" class="fs-4 fw-bolder px-4 py-2 rounded-pill" style="background-color: #e0f2fe; color: var(--primary-color); border: 2px solid #bae6fd;">
+                    1 / 10
+                </span>
+                <button id="nextBtn" class="btn btn-lg fw-bold rounded-pill px-4 text-white" style="background-color: var(--primary-color);" onclick="changeSlide(1)">
+                    <span class="d-none d-sm-inline me-2">Selanjutnya</span> <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- SECTION: LATIHAN SOAL -->
+        <section id="sec-soal" class="content-section d-none scrollable-section d-flex align-items-center justify-content-center p-3">
+            <div class="w-100 bg-white rounded-3xl shadow-custom p-4 p-md-5 mx-auto" style="max-width: 1000px; border: 4px solid var(--primary-color);">
+                
+                <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+                    <h2 class="display-6 font-heading fw-bolder m-0" style="color: var(--primary-color);">Latihan Soal</h2>
+                    <span id="quizCounterText" class="fs-5 fw-bold px-4 py-2 rounded-pill" style="background-color: #e0f2fe; color: var(--primary-color); border: 1px solid #bae6fd;">
+                        Soal 1 / 10
+                    </span>
+                </div>
+
+                <div id="quizQuestionContainer" class="fadeIn">
+                    <!-- Soal HTML di-inject oleh JS -->
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION: REFLEKSI -->
+        <section id="sec-refleksi" class="content-section d-none scrollable-section bg-light p-4">
+            <div class="container bg-white rounded-3xl shadow-custom p-4 p-md-5 my-4" style="max-width: 900px; border: 4px solid #e9d5ff;">
+                
+                <div class="text-center mb-5">
+                    <h2 class="display-5 font-heading fw-bolder" style="color: #7e22ce;">Refleksi Belajar</h2>
+                    <p class="fs-4 text-secondary">Bagaimana perasaan siswa setelah belajar hari ini?</p>
+                </div>
+
+                <!-- 1. Form Input Jumlah Siswa -->
+                <div id="setupRefleksi" class="mx-auto bg-light p-5 rounded-3xl border text-center" style="max-width: 500px;">
+                    <label class="form-label fs-3 font-heading fw-bold mb-4" style="color: #6b21a8;">Jumlah Siswa Hadir:</label>
+                    <input type="number" id="studentCount" min="1" max="50" class="form-control form-control-lg text-center fs-1 font-heading fw-bold mb-4 py-3 rounded-4" value="10">
+                    <button onclick="startReflection()" class="btn btn-success btn-lg w-100 py-3 fs-4 fw-bold rounded-4 shadow-sm">
+                        Mulai Isi Perasaan <i class="fa-solid fa-hand-point-down ms-2"></i>
+                    </button>
+                </div>
+
+                <!-- 2. Daftar Pilih Perasaan -->
+                <div id="activeRefleksi" class="d-none flex-column gap-4">
+                    <div id="studentList" class="d-flex flex-column gap-3">
+                        <!-- Baris siswa di-generate JS -->
+                    </div>
+
+                    <div class="mt-5 text-center border-top pt-5">
+                        <button onclick="finishReflection()" class="btn btn-lg text-white fs-3 fw-bold rounded-pill px-5 py-3 shadow" style="background-color: var(--primary-color);">
+                            <i class="fa-solid fa-save me-2"></i> Simpan Refleksi
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 3. Ringkasan Data Refleksi -->
+                <div id="summaryRefleksi" class="d-none flex-column gap-4 text-center">
+                    <div class="alert alert-success border-2 p-4 rounded-4 mb-4">
+                        <h3 class="font-heading fw-bolder m-0"><i class="fa-solid fa-check-circle me-2"></i> Data Refleksi Tersimpan</h3>
+                    </div>
+                    
+                    <div class="row row-cols-2 row-cols-md-5 g-4" id="summaryGrid">
+                        <!-- Tally di-inject JS -->
+                    </div>
+
+                    <div class="mt-5">
+                        <button onclick="resetReflection()" class="btn btn-danger btn-lg fs-4 fw-bold rounded-pill px-5 py-3 shadow-sm">
+                            <i class="fa-solid fa-trash-can me-2"></i> Reset Data Refleksi
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Custom Modal Bootstrap -->
+    <div class="modal fade" id="msgModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow-lg text-center p-4">
+                <div class="modal-body">
+                    <div class="display-1 mb-4" id="msgIcon">
+                        <!-- Icon HTML -->
+                    </div>
+                    <h3 class="font-heading fw-bolder mb-3" id="msgTitle">Judul</h3>
+                    <p class="fs-5 text-secondary mb-4" id="msgText">Pesan text disini.</p>
+                    <button type="button" class="btn btn-lg w-100 fw-bold text-white rounded-3" data-bs-dismiss="modal" style="background-color: var(--primary-color);">
+                        Tutup Peringatan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        /* =========================================
+           1. NAVIGASI, SIDEBAR & FULLSCREEN
+           ========================================= */
+        const offcanvasElement = document.getElementById('sidebarMenu');
+        const bsOffcanvas = new bootstrap.Offcanvas(offcanvasElement);
+        const myModal = new bootstrap.Modal(document.getElementById('msgModal'));
+
+        function switchTab(tabId) {
+            // Sembunyikan semua section
+            document.querySelectorAll('.content-section').forEach(sec => {
+                sec.classList.add('d-none');
+                sec.classList.remove('d-flex');
+            });
+            
+            const target = document.getElementById(`sec-${tabId}`);
+            if(tabId === 'materi' || tabId === 'soal' || tabId === 'beranda') {
+                target.classList.remove('d-none');
+                target.classList.add('d-flex');
+            } else {
+                target.classList.remove('d-none');
+            }
+            
+            // Hentikan video jika berpindah tab
+            if(tabId !== 'materi') {
+                document.querySelectorAll('iframe').forEach(iframe => { iframe.src = iframe.src; });
+            }
+
+            // Update UI Tombol Menu
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.style.backgroundColor = '';
+                btn.style.color = '';
+                btn.classList.replace('btn-primary', 'btn-light');
+                btn.classList.add('text-secondary');
+            });
+            
+            const btnMap = { 'beranda':0, 'materi':1, 'soal':2, 'refleksi':3 };
+            const activeBtn = document.querySelectorAll('.nav-btn')[btnMap[tabId]];
+            if(activeBtn) {
+                activeBtn.classList.remove('btn-light', 'text-secondary');
+                activeBtn.style.backgroundColor = 'var(--primary-color)';
+                activeBtn.style.color = 'white';
+            }
+
+            // Tutup sidebar jika sedang terbuka
+            bsOffcanvas.hide();
+            
+            if(tabId === 'refleksi') checkReflectionState();
+        }
+
+        document.getElementById('fullscreenBtn').addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+                document.getElementById('fsIcon').className = "fa-solid fa-compress fs-5";
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                    document.getElementById('fsIcon').className = "fa-solid fa-expand fs-5";
+                }
+            }
+        });
+
+        /* =========================================
+           2. LOGIKA SLIDER MATERI
+           ========================================= */
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        
+        function updateSliderUI() {
+            slides.forEach((slide, idx) => {
+                if (idx === currentSlide) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                    const iframe = slide.querySelector('iframe');
+                    if(iframe) iframe.src = iframe.src; 
+                }
+            });
+
+            document.getElementById('slideCounter').textContent = `${currentSlide + 1} / ${slides.length}`;
+            document.getElementById('slideProgress').style.width = `${((currentSlide + 1) / slides.length) * 100}%`;
+            
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            
+            const nBtn = document.getElementById('nextBtn');
+            if (currentSlide === slides.length - 1) {
+                nBtn.innerHTML = '<span class="d-none d-sm-inline">Ke Latihan Soal </span> <i class="fa-solid fa-file-pen ms-2"></i>';
+                nBtn.classList.replace('btn-primary', 'btn-success');
+                nBtn.style.backgroundColor = '#198754';
+            } else {
+                nBtn.innerHTML = '<span class="d-none d-sm-inline">Selanjutnya </span> <i class="fa-solid fa-arrow-right ms-2"></i>';
+                nBtn.classList.replace('btn-success', 'btn-primary');
+                nBtn.style.backgroundColor = 'var(--primary-color)';
+            }
+        }
+
+        function changeSlide(dir) {
+            if (dir === 1 && currentSlide === slides.length - 1) {
+                switchTab('soal'); 
+                return;
+            }
+            currentSlide += dir;
+            if (currentSlide < 0) currentSlide = 0;
+            if (currentSlide >= slides.length) currentSlide = slides.length - 1;
+            updateSliderUI();
+        }
+
+        /* =========================================
+           3. LOGIKA LATIHAN SOAL & AUDIO
+           ========================================= */
+        const quizData = [
+            { q: "Di manakah Nabi Muhammad SAW menerima wahyu pertama dari Allah SWT?", options: ["Gua Tsur, Jabal Tsur", "Gua Hira, Jabal Nur", "Bukit Shafa", "Padang Arafah"], ans: 1, exp: "Wahyu pertama diturunkan kepada Nabi Muhammad SAW di Gua Hira, Jabal Nur saat beliau berusia 40 tahun." },
+            { q: "Surat apakah yang menjadi wahyu pertama bagi Nabi Muhammad SAW?", options: ["Al-Fatihah 1-7", "Al-Muddassir 1-5", "Al-'Alaq 1-5", "Al-Baqarah 1-5"], ans: 2, exp: "Malaikat Jibril menyampaikan wahyu pertama yaitu Surat Al-'Alaq ayat 1-5 dengan perintah Iqra' (Bacalah!)." },
+            { q: "Siapakah pendeta Nasrani yang membenarkan kenabian Muhammad SAW setelah peristiwa di Gua Hira?", options: ["Abu Thalib", "Waraqah bin Naufal", "Abu Bakar", "Umar bin Khattab"], ans: 1, exp: "Waraqah bin Naufal, sepupu Khadijah, menegaskan bahwa sosok yang mendatangi Nabi di Gua Hira adalah Malaikat Jibril." },
+            { q: "Berapa lamakah Rasulullah SAW melaksanakan dakwah secara sembunyi-sembunyi (Sirriyah)?", options: ["1 Tahun", "2 Tahun", "3 Tahun", "5 Tahun"], ans: 2, exp: "Dakwah secara sembunyi-sembunyi berlangsung selama kurang lebih tiga tahun di Makkah." },
+            { q: "Di rumah siapakah pusat pembinaan keimanan saat dakwah sembunyi-sembunyi dilakukan?", options: ["Abu Bakar Ash-Shiddiq", "Khadijah binti Khuwailid", "Ali bin Abi Thalib", "Arqam bin Abi Al-Arqam"], ans: 3, exp: "Pusat kegiatan dakwah dan pembinaan keimanan dipusatkan di rumah Arqam bin Abi Al-Arqam (Darul Arqam)." },
+            { q: "Orang-orang yang pertama kali beriman dan memeluk agama Islam disebut golongan?", options: ["Khulafaur Rasyidin", "Muhajirin", "Anshar", "Assabiqunal Awwalun"], ans: 3, exp: "Golongan yang pertama kali beriman kepada ajaran Islam dikenal dalam sejarah sebagai Assabiqunal Awwalun." },
+            { q: "Turunnya Surat Al-Hijr ayat 94 memerintahkan Rasulullah SAW untuk melakukan?", options: ["Hijrah ke Madinah", "Hijrah ke Habasyah", "Dakwah Terang-terangan", "Perang Badar"], ans: 2, exp: "Surat Al-Hijr ayat 94 adalah perintah untuk menyampaikan dakwah secara terang-terangan (Dakwah Jahriyah)." },
+            { q: "Di manakah Rasulullah SAW pertama kali mengumpulkan kaum Quraisy untuk berdakwah secara terang-terangan?", options: ["Bukit Marwah", "Bukit Shafa", "Padang Arafah", "Gua Hira"], ans: 1, exp: "Rasulullah SAW mengumpulkan masyarakat Makkah dan berdiri di kaki Bukit Shafa untuk menyeru kaum Quraisy." },
+            { q: "Siapakah paman Nabi yang langsung menolak dan mencaci maki saat dakwah di Bukit Shafa?", options: ["Abu Thalib", "Abu Jahal", "Abu Lahab", "Hamzah"], ans: 2, exp: "Abu Lahab adalah paman Nabi yang langsung berteriak menolak dan mencaci-maki ajaran Beliau di Bukit Shafa." },
+            { q: "Siapakah wanita yang menjadi syahidah (gugur syahid) pertama dalam sejarah Islam akibat siksaan kafir Quraisy?", options: ["Khadijah", "Sumayyah", "Fatimah", "Aisyah"], ans: 1, exp: "Sumayyah (istri Yasir) mengalami penyiksaan hebat hingga menjadi syahidah pertama dalam Islam." }
+        ];
+
+        let currentQuestion = 0;
+        let correctScore = 0;
+
+        function renderQuestion() {
+            const container = document.getElementById('quizQuestionContainer');
+            
+            // Animasi masuk
+            container.style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('quizCounterText').innerText = `Soal ${currentQuestion + 1} / ${quizData.length}`;
+                
+                const item = quizData[currentQuestion];
+                
+                let html = `
+                    <h3 class="fs-1 fw-bold text-dark mb-5 text-center lh-base">${item.q}</h3>
+                    <div class="row g-4" id="optionsContainer">
+                `;
+                
+                item.options.forEach((opt, oIndex) => {
+                    html += `
+                        <div class="col-md-6">
+                            <button class="w-100 quiz-btn d-flex align-items-center" onclick="submitAnswer(${oIndex}, ${item.ans})">
+                                <span class="d-inline-flex justify-content-center align-items-center rounded-circle bg-secondary bg-opacity-25 text-dark font-heading fw-bold me-4 flex-shrink-0" style="width: 50px; height: 50px; font-size: 1.5rem;">${String.fromCharCode(65 + oIndex)}</span>
+                                <span class="fs-4 fw-bold text-dark">${opt}</span>
+                            </button>
+                        </div>
+                    `;
+                });
+                
+                html += `
+                    </div>
+                    <div id="quizFeedback" class="mt-5 p-4 rounded-4 d-none text-center border"></div>
+                    <div class="mt-5 text-center d-none" id="nextQuestionWrapper">
+                        <button onclick="nextQuestion()" class="btn btn-lg text-white fw-bold px-5 py-3 rounded-pill fs-4 shadow-sm" style="background-color: var(--primary-color);">
+                            ${currentQuestion === quizData.length - 1 ? 'Lihat Hasil Akhir <i class="fa-solid fa-flag-checkered ms-2"></i>' : 'Soal Selanjutnya <i class="fa-solid fa-arrow-right ms-2"></i>'}
+                        </button>
+                    </div>
+                `;
+                container.innerHTML = html;
+                container.style.transition = 'opacity 0.4s';
+                container.style.opacity = '1';
+            }, 100);
+        }
+
+        function submitAnswer(selectedIndex, correctIndex) {
+            const btns = document.querySelectorAll('.quiz-btn');
+            btns.forEach((btn, idx) => {
+                btn.disabled = true;
+                
+                if(idx === correctIndex) {
+                    btn.style.borderColor = '#198754';
+                    btn.style.backgroundColor = '#d1e7dd';
+                } else if(idx === selectedIndex && selectedIndex !== correctIndex) {
+                    btn.style.borderColor = '#dc3545';
+                    btn.style.backgroundColor = '#f8d7da';
+                } else {
+                    btn.style.opacity = '0.5'; 
+                }
+            });
+
+            const feedback = document.getElementById('quizFeedback');
+            const item = quizData[currentQuestion];
+            
+            // Audio Playback
+            const audioBenar = document.getElementById('audioBenar');
+            const audioSalah = document.getElementById('audioSalah');
+            
+            if (selectedIndex === correctIndex) {
+                correctScore++;
+                // Mainkan Audio Benar
+                audioBenar.currentTime = 0;
+                audioBenar.play().catch(e => console.log("Audio play blocked by browser:", e));
+
+                feedback.className = "mt-5 p-4 rounded-4 text-center border border-success bg-success bg-opacity-10 text-success";
+                feedback.innerHTML = `<i class="fa-solid fa-circle-check fs-2 mb-2"></i><br><span class="fs-3 fw-bold">BENAR!</span> <br><span class="fs-5 mt-2 d-block">${item.exp}</span>`;
+            } else {
+                // Mainkan Audio Salah
+                audioSalah.currentTime = 0;
+                audioSalah.play().catch(e => console.log("Audio play blocked by browser:", e));
+
+                feedback.className = "mt-5 p-4 rounded-4 text-center border border-danger bg-danger bg-opacity-10 text-danger";
+                feedback.innerHTML = `<i class="fa-solid fa-circle-xmark fs-2 mb-2"></i><br><span class="fs-3 fw-bold">SALAH.</span> <br><span class="fs-5 mt-2 d-block">${item.exp}</span>`;
+            }
+            
+            feedback.classList.remove('d-none');
+            document.getElementById('nextQuestionWrapper').classList.remove('d-none');
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if(currentQuestion < quizData.length) {
+                renderQuestion();
+            } else {
+                showQuizResult();
+            }
+        }
+
+        function showQuizResult() {
+            document.getElementById('quizCounterText').innerText = "Selesai!";
+            const container = document.getElementById('quizQuestionContainer');
+            
+            const totalScore = (correctScore / quizData.length) * 100;
+            let msg = totalScore >= 80 ? "Luar Biasa! Pertahankan belajarmu!" : "Tetap semangat belajar lagi ya!";
+            
+            container.innerHTML = `
+                <div class="text-center py-5">
+                    <i class="fa-solid fa-trophy text-warning mb-4" style="font-size: 6rem;"></i>
+                    <h3 class="display-4 font-heading fw-bolder mb-3" style="color: var(--primary-color);">Latihan Selesai!</h3>
+                    <p class="fs-3 text-secondary mb-5">${msg}</p>
+                    
+                    <div class="bg-light border rounded-4 p-5 mb-5 mx-auto" style="max-width: 400px; border-color: #bae6fd !important;">
+                        <span class="d-block fs-4 fw-bold text-secondary mb-2">Skor Kamu:</span>
+                        <span class="d-block fw-black" style="font-size: 6rem; color: var(--primary-color);">${totalScore}</span>
+                    </div>
+
+                    <button onclick="resetQuiz()" class="btn btn-3d-primary btn-lg rounded-pill px-5 py-3 fs-3 fw-bold shadow-sm">
+                        <i class="fa-solid fa-rotate-right me-2"></i> Ulangi Latihan
+                    </button>
+                </div>
+            `;
+        }
+
+        function resetQuiz() {
+            currentQuestion = 0;
+            correctScore = 0;
+            renderQuestion();
+        }
+
+        // Init Pertama
+        renderQuestion();
+
+        /* =========================================
+           4. LOGIKA REFLEKSI (LOCALSTORAGE)
+           ========================================= */
+        const REFLEKSI_KEY = 'refleksiDakwahNabiBS5'; 
+        
+        const emojiIcons = [
+            '<i class="fa-solid fa-face-grin-stars text-warning"></i>',
+            '<i class="fa-solid fa-face-smile text-success"></i>',
+            '<i class="fa-solid fa-face-meh text-secondary"></i>',
+            '<i class="fa-solid fa-face-frown text-orange"></i>', /* Custom orange inline class missing in BS5, use style */
+            '<i class="fa-solid fa-face-sad-tear text-danger"></i>'
+        ];
+        const emojiColors = ['text-warning', 'text-success', 'text-secondary', 'text-warning', 'text-danger']; // for BS mapping
+        const emojiLabels = ['Sangat Senang', 'Senang', 'Biasa Saja', 'Kurang Paham', 'Sedih'];
+
+        function checkReflectionState() {
+            const savedData = localStorage.getItem(REFLEKSI_KEY);
+            if (savedData) {
+                document.getElementById('setupRefleksi').classList.add('d-none');
+                document.getElementById('activeRefleksi').classList.add('d-none');
+                document.getElementById('activeRefleksi').classList.remove('d-flex');
+                
+                const tally = JSON.parse(savedData);
+                const grid = document.getElementById('summaryGrid');
+                grid.innerHTML = '';
+                
+                tally.forEach((count, idx) => {
+                    grid.innerHTML += `
+                        <div class="col">
+                            <div class="bg-light border rounded-4 p-4 d-flex flex-column align-items-center justify-content-center h-100 shadow-sm">
+                                <div class="display-3 mb-3 ${idx === 3 ? 'text-warning' : ''}" ${idx === 3 ? 'style="color:#fd7e14 !important;"' : ''}>${emojiIcons[idx]}</div>
+                                <div class="display-5 fw-bolder mb-2 text-dark">${count}</div>
+                                <div class="small fw-bold text-secondary text-uppercase">${emojiLabels[idx]}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                document.getElementById('summaryRefleksi').classList.remove('d-none');
+                document.getElementById('summaryRefleksi').classList.add('d-flex');
+            } else {
+                document.getElementById('summaryRefleksi').classList.add('d-none');
+                document.getElementById('summaryRefleksi').classList.remove('d-flex');
+                document.getElementById('activeRefleksi').classList.add('d-none');
+                document.getElementById('activeRefleksi').classList.remove('d-flex');
+                document.getElementById('setupRefleksi').classList.remove('d-none');
+            }
+        }
+
+        function startReflection() {
+            const count = parseInt(document.getElementById('studentCount').value);
+            if (isNaN(count) || count < 1 || count > 50) {
+                showModal("Perhatian", "Masukkan jumlah siswa yang benar (1-50).", '<i class="fa-solid fa-triangle-exclamation text-warning"></i>');
+                return;
+            }
+
+            document.getElementById('setupRefleksi').classList.add('d-none');
+            const list = document.getElementById('studentList');
+            list.innerHTML = '';
+            
+            for (let i = 1; i <= count; i++) {
+                const row = document.createElement('div');
+                row.className = "bg-white p-4 rounded-4 shadow-sm border d-flex flex-column flex-md-row align-items-center justify-content-between gap-4";
+                
+                let rowHtml = `<span class="fs-3 font-heading fw-bolder" style="color: #6b21a8; min-width: 150px;">Siswa ${i}</span>`;
+                rowHtml += `<div class="d-flex gap-3 emoji-group" data-student="${i}">`;
+                
+                emojiIcons.forEach((emoji, index) => {
+                    let customStyle = index === 3 ? 'style="color:#fd7e14 !important;"' : ''; // Orange fix
+                    rowHtml += `
+                        <button class="emoji-btn fs-1 p-2 focus-ring focus-ring-light" data-emoji-index="${index}" onclick="selectEmoji(this)" ${customStyle}>
+                            ${emoji}
+                        </button>
+                    `;
+                });
+                
+                rowHtml += `</div>`;
+                row.innerHTML = rowHtml;
+                list.appendChild(row);
+            }
+            
+            document.getElementById('activeRefleksi').classList.remove('d-none');
+            document.getElementById('activeRefleksi').classList.add('d-flex');
+        }
+
+        function selectEmoji(btnElement) {
+            const group = btnElement.closest('.emoji-group');
+            group.querySelectorAll('.emoji-btn').forEach(b => {
+                b.classList.remove('selected');
+            });
+            btnElement.classList.add('selected');
+        }
+
+        function finishReflection() {
+            const groups = document.querySelectorAll('.emoji-group');
+            let allSelected = true;
+            let tally = [0, 0, 0, 0, 0]; 
+
+            groups.forEach(group => {
+                const selected = group.querySelector('.selected');
+                if (!selected) {
+                    allSelected = false;
+                } else {
+                    const idx = parseInt(selected.getAttribute('data-emoji-index'));
+                    tally[idx]++;
+                }
+            });
+
+            if(!allSelected) {
+                showModal("Belum Lengkap!", "Masih ada siswa yang belum memilih perasaannya.", '<i class="fa-solid fa-circle-exclamation text-danger"></i>');
+            } else {
+                localStorage.setItem(REFLEKSI_KEY, JSON.stringify(tally));
+                
+                showModal("Alhamdulillah!", "Data refleksi berhasil disimpan secara permanen.", '<i class="fa-solid fa-cloud-arrow-up text-success"></i>');
+                
+                setTimeout(() => {
+                    checkReflectionState();
+                    document.getElementById('sec-refleksi').scrollTo({ top: 0, behavior: 'smooth' });
+                }, 1500);
+            }
+        }
+
+        function resetReflection() {
+            if(confirm("Apakah Anda yakin ingin menghapus data refleksi sebelumnya?")) {
+                localStorage.removeItem(REFLEKSI_KEY);
+                checkReflectionState();
+            }
+        }
+
+        /* =========================================
+           5. MODAL CUSTOM (BOOTSTRAP)
+           ========================================= */
+        function showModal(title, text, iconHTML) {
+            document.getElementById('msgTitle').innerText = title;
+            document.getElementById('msgText').innerText = text;
+            document.getElementById('msgIcon').innerHTML = iconHTML; 
+            myModal.show();
+        }
+
+        updateSliderUI();
+    </script>
+</body>
+</html>
